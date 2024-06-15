@@ -1,9 +1,46 @@
 ---
+import { Image, getImage } from "astro:assets";
 import Layout from "../layouts/Layout.astro";
-import { Image } from "astro:assets";
 import { Projects } from "../components/Projects.tsx";
 import YC from "../images/y18.svg";
 import Penn from "../images/penn.png";
+import BLACKIVY from "../images/BLACKIVY.png";
+import Shipp from "../images/Shipp.png";
+import CC from "../images/CC-white.png";
+
+const BLACKIVYImage = await getImage({ src: BLACKIVY});
+const shippImage = await getImage({ src: Shipp});
+const CCImage = await getImage({ src: CC});
+
+const startups = [
+    {
+        title: "",
+        description: "AI-Powered Stealth Startup (YC S24)",
+        href: "/",
+        bgColor: "bg-gradient-to-br from-orange-500 to-rose-400 hover:bg-gradient-to-tl",
+    },
+    {
+        title: "BLACKIVY",
+        description: "Alumni club for brillant black minds.",
+        href: "https://blkivy.club/",
+        image: BLACKIVYImage.src,
+        bgColor: "bg-gradient-to-b from-black to-slate-600",
+    },
+    {
+        title: "Shipp",
+        description: "Online dating sucks. Meet IRL.",
+        href: "https://apps.apple.com/us/app/shipp-dating-app/id6445876197",
+        image: shippImage.src,
+        bgColor: "bg-gradient-to-b from-amber-50 from-50% to-[#50C4BF]",
+    },
+    {
+        title: "Common Cents",
+        description: "Personal finance education nonprofit.",
+        href: "https://commoncents.org",
+        image: CCImage.src,
+        bgColor: "bg-gradient-to-br from-zinc-300 from-33% to-slate-400",
+    },
+]
 
 ---
 
@@ -32,7 +69,7 @@ import Penn from "../images/penn.png";
 			<p class="badge [--slidein-delay:500ms]">Raised in Philly</p>
 			<p class="badge [--slidein-delay:600ms]">Made in 🌍</p>
 		</div>
-		<Projects client:only/>
+		<Projects startups={startups} client:only/>
 	</main>
 </Layout>
 

@@ -3,7 +3,15 @@ import { motion } from 'framer-motion'
 import Card from './Card';
 import { cn } from '../utils';
 
-export const Projects = () => {
+type Project = {
+    title: string;
+    description: string;
+    href: string;
+    bgColor: string;
+    image?: string;
+}
+
+export const Projects = ({ startups } : { startups: Project[] }) => {
 
     const divRef = useRef<HTMLDivElement>(null);
 
@@ -119,36 +127,6 @@ export const Projects = () => {
     )
 
 };
-
-const startups = [
-    {
-        title: "",
-        description: "AI-Powered Stealth Startup (YC S24)",
-        href: "/",
-        bgColor: "bg-gradient-to-br from-orange-500 to-rose-400 hover:bg-gradient-to-tl",
-    },
-    {
-        title: "BLACKIVY",
-        description: "Alumni club for brillant black minds.",
-        href: "https://blkivy.club/",
-        image: "/images/BLACKIVY.png",
-        bgColor: "bg-gradient-to-b from-black to-slate-600",
-    },
-    {
-        title: "Shipp",
-        description: "Online dating sucks. Meet IRL.",
-        href: "https://apps.apple.com/us/app/shipp-dating-app/id6445876197",
-        image: "/images/Shipp.png",
-        bgColor: "bg-gradient-to-b from-amber-50 from-50% to-[#50C4BF]",
-    },
-    {
-        title: "Common Cents",
-        description: "Personal finance education nonprofit.",
-        href: "https://commoncents.org",
-        image: "/images/CC-white.png",
-        bgColor: "bg-gradient-to-br from-zinc-300 from-33% to-slate-400",
-    },
-]
 
 const lineStyle = {
     strokeWidth: "2.5px",
