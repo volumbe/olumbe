@@ -51,16 +51,6 @@ export const Projects = () => {
             transition: { duration: 1, delay: 1.2 }
         },
     }
-    const avatar = {
-        hidden: { opacity: 0, scale: 0.5, y: 50 },
-        show: {
-            opacity: 1,
-            scale: 1,
-            y: 0,
-            transition: { duration: 0.5 }
-        },
-    }
-
 
     useEffect(() => {
         if (!divRef.current) return;
@@ -102,20 +92,16 @@ export const Projects = () => {
                         style={lineStyle} x1="0" y1="10" x2={dimensions.width} y2="10" />
                     <motion.circle
                         initial={{ scale: 1 }}
-                        animate={{ scale: 1.75, transition: { repeat: Infinity, repeatType: "mirror", ease: "easeInOut", duration: 1}}}
+                        animate={{ scale: 1.75, transition: { repeat: Infinity, repeatType: "mirror", ease: "easeInOut", duration: 1 } }}
                         className="z-30 hover:cursor-zoom-in"
                         onClick={() => setIsOpen(!isOpen)}
                         onHoverStart={() => setIsOpen(true)}
                         onHoverEnd={() => setIsOpen(false)}
                         cx={dimensions.width / 2} cy={10} r={5} fill="url('#radialGradient')" />
                 </motion.svg>}
-            <motion.div
-                className={cn(isOpen ? "visible" : "invisible", "absolute -mt-48 sm:-mt-56 sm:flex flex-col justify-center items-center")}
-                variants={avatar}
-                initial="hidden"
-                animate={isOpen ? "show" : "hidden"}>
-                <Avatar />
-            </motion.div>
+
+            <Avatar isOpen={isOpen} setIsOpen={setIsOpen} />
+
             <ul className="grid grid-rows-2 grid-flow-col gap-4 md:flex md:flex-wrap md:justify-between w-fit pt-4 lg:gap-8">
                 {startups.map((project, i) => (
                     <motion.li
@@ -179,13 +165,31 @@ const gradientStop2 = {
     stopColor: "rgb(255, 95, 109)"
 }
 
-const Avatar = () => (
-    <div className="flex flex-col items-center justify-center">
-        <img src="images/selfie.png" alt="Selfie" loading="eager" className="object-cover rounded-xl aspect-[5/4] h-48 sm:h-52 drop-shadow-2xl" />
-        <svg width={1} height={15} className='h-2 sm:h-5'>
-            <line
-                strokeLinecap={"round"}
-                style={lineStyle} x1="0" y1="0" x2="0" y2="75" />
-        </svg>
-    </div>
-);
+const Avatar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (b: boolean) => void }) => {
+
+    const avatar = {
+        hidden: { opacity: 0, scale: 0.5, y: 50 },
+        show: {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            transition: { duration: 0.5 }
+        },
+    }
+    return (
+        <motion.div
+            className={cn(isOpen ? "visible" : "invisible", "absolute -mt-48 sm:-mt-56 sm:flex flex-col justify-center items-center")}
+            variants={avatar}
+            initial="hidden"
+            animate={isOpen ? "show" : "hidden"}>
+            <div className="flex flex-col items-center justify-center">
+                <img src="images/selfie.png" alt="Selfie" loading="eager" className="object-cover rounded-xl aspect-[5/4] h-48 sm:h-52 drop-shadow-2xl" onClick={() => setIsOpen(false)} />
+                <svg width={1} height={15} className='h-2 sm:h-5'>
+                    <line
+                        strokeLinecap={"round"}
+                        style={lineStyle} x1="0" y1="0" x2="0" y2="75" />
+                </svg>
+            </div>
+        </motion.div>
+    );
+}
