@@ -79,7 +79,7 @@ export const Projects = () => {
         },
     }
     const avatar = {
-        hidden: {opacity: 0, scale: 0.5, y: 100 },
+        hidden: {opacity: 0, scale: 0.5, y: 50 },
         show: {
             opacity: 1,
             scale: 1,
@@ -126,7 +126,7 @@ export const Projects = () => {
                         cx={dimensions.width / 2} cy={10} r={5} fill="url('#radialGradient')" />
                 </motion.svg>}
                 <motion.div
-                className={cn(isOpen ? "visible" : "invisible", "absolute -mt-56 sm:flex flex-col justify-center items-center")}
+                className={cn(isOpen ? "visible" : "invisible", "absolute -mt-48 sm:-mt-56 sm:flex flex-col justify-center items-center")}
                 variants={avatar}
                 initial="hidden"
                 animate={isOpen ? "show" : "hidden"}>
@@ -197,11 +197,11 @@ const gradientStop2 = {
 
 const Avatar = () => (
     <div className="flex flex-col items-center justify-center">
-        <img src={Selfie.src} alt="Selfie" loading="eager" className="object-cover rounded-xl aspect-square w-52 drop-shadow-2xl" />
-        <svg width={1} height={20}>
+        <img src={Selfie.src} alt="Selfie" loading="eager" className="object-cover rounded-xl aspect-square w-48 sm:w-52 drop-shadow-2xl" />
+        <svg width={1} height={15} className='h-2 sm:h-5'>
             <line
                 strokeLinecap={"round"}
-                style={lineStyle} x1="0" y1="0" x2="0" y2="100" />
+                style={lineStyle} x1="0" y1="0" x2="0" y2="75" />
             </svg>
     </div>
 );
