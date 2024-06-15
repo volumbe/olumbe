@@ -1,9 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion'
-import BLACKIVY from "../images/BLACKIVY.png";
-import CommonCents from "../images/CC-white.png";
-import Shipp from "../images/Shipp.png";
-import Selfie from "../images/selfie.png";
 import Card from './Card';
 import { cn } from '../utils';
 
@@ -25,26 +21,16 @@ export const Projects = () => {
 
     const handleResize = () => {
         setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
+            width: window.innerWidth,
+            height: window.innerHeight,
         });
-      }
+    }
 
     useEffect(() => {
-      window.addEventListener("resize", handleResize, false);
+        window.addEventListener("resize", handleResize, false);
     }, []);
 
     const [isOpen, setIsOpen] = useState(false);
-
-    useEffect(() => {
-        if (!divRef.current) return;
-        
-        const { width, height, top, left } = divRef.current.getBoundingClientRect();
-
-        console.log(windowSize, width, dimensions.width)
-
-        setDimensions({ width, height, top, left });
-    }, [windowSize]);
 
     const svg = {
         hidden: { opacity: 0 },
@@ -57,19 +43,6 @@ export const Projects = () => {
             }
         }
     }
-
-    const circle = {
-        hidden: { scale: 0 },
-        show: {
-            scale: 1.5,
-            transition: {
-                delay: 1.1,
-                duration: 0.5,
-                type: 'spring',
-            }
-        }
-    }
-
     const line = {
         hidden: { strokeDasharray: `0 ${dimensions.width}`, strokeDashoffset: - dimensions.width / 2 },
         show: {
@@ -79,7 +52,7 @@ export const Projects = () => {
         },
     }
     const avatar = {
-        hidden: {opacity: 0, scale: 0.5, y: 50 },
+        hidden: { opacity: 0, scale: 0.5, y: 50 },
         show: {
             opacity: 1,
             scale: 1,
@@ -87,6 +60,18 @@ export const Projects = () => {
             transition: { duration: 0.5 }
         },
     }
+
+
+    useEffect(() => {
+        if (!divRef.current) return;
+
+        const { width, height, top, left } = divRef.current.getBoundingClientRect();
+
+        console.log(windowSize, width, dimensions.width)
+
+        setDimensions({ width, height, top, left });
+
+    }, [windowSize]);
 
     return (
         <div ref={divRef} className="flex flex-col items-center w-full">
@@ -116,22 +101,21 @@ export const Projects = () => {
                         className="px-10"
                         style={lineStyle} x1="0" y1="10" x2={dimensions.width} y2="10" />
                     <motion.circle
+                        initial={{ scale: 1 }}
+                        animate={{ scale: 1.75, transition: { repeat: Infinity, repeatType: "mirror", ease: "easeInOut", duration: 1}}}
                         className="z-30 hover:cursor-zoom-in"
-                        initial="hidden"
-                        animate="show"
                         onClick={() => setIsOpen(!isOpen)}
                         onHoverStart={() => setIsOpen(true)}
                         onHoverEnd={() => setIsOpen(false)}
-                        variants={circle}
                         cx={dimensions.width / 2} cy={10} r={5} fill="url('#radialGradient')" />
                 </motion.svg>}
-                <motion.div
+            <motion.div
                 className={cn(isOpen ? "visible" : "invisible", "absolute -mt-48 sm:-mt-56 sm:flex flex-col justify-center items-center")}
                 variants={avatar}
                 initial="hidden"
                 animate={isOpen ? "show" : "hidden"}>
-                    <Avatar />
-                </motion.div>
+                <Avatar />
+            </motion.div>
             <ul className="grid grid-rows-2 grid-flow-col gap-4 md:flex md:flex-wrap md:justify-between w-fit pt-4 lg:gap-8">
                 {startups.map((project, i) => (
                     <motion.li
@@ -161,21 +145,21 @@ const startups = [
         title: "BLACKIVY",
         description: "Alumni club for brillant black minds.",
         href: "https://blkivy.club/",
-        image: BLACKIVY,
+        image: "images/BLACKIVY.png",
         bgColor: "bg-gradient-to-b from-black to-slate-600",
     },
     {
         title: "Shipp",
         description: "Online dating sucks. Meet IRL.",
         href: "https://apps.apple.com/us/app/shipp-dating-app/id6445876197",
-        image: Shipp,
+        image: "/images/Shipp.png",
         bgColor: "bg-gradient-to-b from-amber-50 from-50% to-[#50C4BF]",
     },
     {
         title: "Common Cents",
         description: "Personal finance education nonprofit.",
         href: "https://commoncents.org",
-        image: CommonCents,
+        image: "/images/CC-white.png",
         bgColor: "bg-gradient-to-br from-zinc-300 from-33% to-slate-400",
     },
 ]
@@ -197,11 +181,11 @@ const gradientStop2 = {
 
 const Avatar = () => (
     <div className="flex flex-col items-center justify-center">
-        <img src={Selfie.src} alt="Selfie" loading="eager" className="object-cover rounded-xl aspect-square w-48 sm:w-52 drop-shadow-2xl" />
+        <img src="images/selfie.png" alt="Selfie" loading="eager" className="object-cover rounded-xl aspect-[5/4] h-48 sm:h-52 drop-shadow-2xl" />
         <svg width={1} height={15} className='h-2 sm:h-5'>
             <line
                 strokeLinecap={"round"}
                 style={lineStyle} x1="0" y1="0" x2="0" y2="75" />
-            </svg>
+        </svg>
     </div>
 );
