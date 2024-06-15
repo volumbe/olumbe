@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion'
 import Card from './Card';
 import { cn } from '../utils';
+import Selfie from '../images/selfie.png';
 
 type Project = {
     title: string;
@@ -161,7 +162,7 @@ const Avatar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (b: boolean
             initial="hidden"
             animate={isOpen ? "show" : "hidden"}>
             <div className="flex flex-col items-center justify-center">
-                <img src="/images/selfie.png" alt="Selfie" loading="eager" className="object-cover rounded-xl aspect-[5/4] h-48 sm:h-52 drop-shadow-2xl" onClick={() => setIsOpen(false)} />
+                <img src={Selfie.src} alt="Selfie" loading="eager" className="object-cover rounded-xl aspect-[5/4] h-48 sm:h-52 drop-shadow-2xl" onClick={() => setIsOpen(false)} />
                 <svg width={1} height={15} className='h-2 sm:h-5'>
                     <line
                         strokeLinecap={"round"}
