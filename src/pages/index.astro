@@ -10,7 +10,7 @@ import Penn from "../images/penn.png";
 <Layout title="👨🏿‍💻">
 	<main class="flex flex-col px-8 py-4 text-center w-full max-w-screen-lg max-h-screen">
 		<h1 class="name [--slidein-delay:200ms]">Vivek Olumbe</h1>
-		<div class="flex flex-col gap-6 text-center items-center mb-4">
+		<div class="flex flex-col gap-3 sm:gap-6 text-center items-center mb-4">
 			<p class="badge opacity-0 [--slidein-delay:300ms]">
 				Backed by <Image
 					src={YC}
@@ -43,7 +43,7 @@ import Penn from "../images/penn.png";
 
 	@layer components {
 		.name {
-			@apply text-5xl font-extrabold tracking-wide uppercase animate-slidein opacity-0 text-center pb-8 sm:pb-10 z-40;
+			@apply text-4xl sm:text-5xl font-extrabold tracking-wide uppercase animate-slidein opacity-0 text-center pb-8 z-40;
 		}
 		.badge {
 			@apply flex items-center gap-1 bg-slate-200 bg-opacity-40 w-fit px-4 py-[0.1rem] rounded-full justify-center animate-slidein opacity-0;
