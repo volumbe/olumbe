@@ -7,17 +7,19 @@ import Penn from "../images/penn.png";
 import BLACKIVY from "../images/BLACKIVY.png";
 import Shipp from "../images/Shipp.png";
 import CC from "../images/CC-white.png";
+import Affil from "../images/Affil.png";
 
 const BLACKIVYImage = await getImage({ src: BLACKIVY});
 const shippImage = await getImage({ src: Shipp});
 const CCImage = await getImage({ src: CC});
-
+const AffilImage = await getImage({ src: Affil });
 const startups = [
     {
-        title: "",
-        description: "YC S24 AI-Powered Stealth Startup.",
+        title: "Affil.ai",
+        description: "AI-powered financial affiliate network.",
         href: "https://affil.ai",
-        bgColor: "bg-gradient-to-br from-orange-500 to-rose-400 hover:bg-gradient-to-tl",
+		image: AffilImage.src,
+        bgColor: "bg-gradient-to-br from-blue-950 to-blue-900 hover:bg-gradient-to-tl",
     },
     {
         title: "BLACKIVY",
