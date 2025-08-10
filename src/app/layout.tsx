@@ -4,10 +4,16 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: {
     default: "/",
-    template: "%s | Vivek Olumbe"
+    template: "olumbe/%s",
   },
   description: "Vivek Olumbe - Backed by Y Combinator, Taught at Penn",
-  keywords: ["Vivek Olumbe", "Y Combinator", "Penn", "entrepreneur", "startups"],
+  keywords: [
+    "Vivek Olumbe",
+    "Y Combinator",
+    "Penn",
+    "entrepreneur",
+    "startups",
+  ],
   authors: [{ name: "Vivek Olumbe" }],
   creator: "Vivek Olumbe",
   openGraph: {
@@ -57,7 +63,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="min-h-screen bg-black bg-gradient-to-b from-slate-900/70 to-black/80">
+    <html
+      lang="en"
+      className="min-h-screen bg-black bg-gradient-to-b from-slate-900/70 to-black/80"
+    >
       <head>
         <link
           rel="preload"

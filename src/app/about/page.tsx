@@ -8,8 +8,7 @@ import CC from "@/images/CC-white.png";
 import Affil from "@/images/Affil.png";
 
 export const metadata = {
-  title: "About",
-  description: "About Vivek Olumbe",
+  title: "about",
 };
 
 const startups = [
