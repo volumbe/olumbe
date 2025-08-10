@@ -10,7 +10,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@ai-sdk/google": "^2.0.3",
+    "@ai-sdk/react": "^2.0.9",
     "@fontsource/ubuntu": "^5.0.13",
+    "ai": "^5.0.9",
     "clsx": "^2.1.1",
     "framer-motion": "^11.2.10",
     "next": "^15.0.0",
