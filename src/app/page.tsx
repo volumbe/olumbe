@@ -10,11 +10,17 @@ type OutputLine = {
 export default function Terminal() {
   const [output, setOutput] = useState<OutputLine[]>([
     { text: "Welcome to the Olumbe terminal.", variant: "system" },
-    { text: "Type help for options.", variant: "system" },
+    { text: "Type /help for options.", variant: "system" },
   ]);
   const [input, setInput] = useState("");
   const outputRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  type CommandHelp = { name: string; description: string };
+  const availableCommands: CommandHelp[] = [
+    { name: "/help", description: "Show this help" },
+    { name: "/clear", description: "Clear the terminal" },
+  ];
 
   const appendLine = (
     text: string,
@@ -25,8 +31,9 @@ export default function Terminal() {
 
   const showHelp = () => {
     appendLine("Available commands:", "info");
-    appendLine("  help   - Show this help", "system");
-    appendLine("  clear  - Clear the terminal", "system");
+    availableCommands.forEach((cmd) =>
+      appendLine(`  ${cmd.name.padEnd(7, " ")} - ${cmd.description}`, "system")
+    );
   };
 
   const handleCommand = (command: string) => {
@@ -35,7 +42,14 @@ export default function Terminal() {
 
     appendLine(`guest@olumbe: ${trimmedCommand}`);
 
-    switch (trimmedCommand.toLowerCase()) {
+    if (!trimmedCommand.startsWith("/")) {
+      appendLine("Commands must start with '/'. Try /help.", "system");
+      return;
+    }
+
+    const normalized = trimmedCommand.slice(1).toLowerCase();
+
+    switch (normalized) {
       case "clear":
         setOutput([]);
         break;
@@ -43,6 +57,7 @@ export default function Terminal() {
         showHelp();
         break;
       default:
+        appendLine(`Unknown command: ${trimmedCommand}. Type /help.`, "system");
         break;
     }
   };
@@ -121,7 +136,26 @@ export default function Terminal() {
           </div>
 
           <form className="mt-3" onSubmit={handleSubmit}>
-            <div className="group flex items-center gap-2 rounded-lg border border-slate-800/70 bg-slate-900/40 px-3 py-2 focus-within:border-emerald-400/60 focus-within:shadow-[0_0_0_3px_rgba(52,211,153,0.15)] transition">
+            <div className="group relative flex items-center gap-2 rounded-lg border border-slate-800/70 bg-slate-900/40 px-3 py-2 focus-within:border-emerald-400/60 focus-within:shadow-[0_0_0_3px_rgba(52,211,153,0.15)] transition">
+              {input.trim().startsWith("/") && (
+                <div className="absolute left-0 right-0 -top-2 translate-y-[-100%] z-10 rounded-md border border-slate-800/70 bg-slate-900/95 backdrop-blur px-3 py-2 shadow-xl">
+                  <p className="text-[0.7rem] uppercase tracking-wider text-slate-400 mb-1">
+                    Available commands
+                  </p>
+                  <ul className="text-sm font-mono text-slate-100 space-y-1">
+                    {availableCommands.map((cmd) => (
+                      <li key={cmd.name} className="flex items-center gap-2">
+                        <span className="text-emerald-300 whitespace-nowrap">
+                          {cmd.name}
+                        </span>
+                        <span className="text-slate-400">
+                          - {cmd.description}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               <span className="select-none text-emerald-400">
                 guest@olumbe:
               </span>
@@ -130,7 +164,7 @@ export default function Terminal() {
                 type="text"
                 name="command"
                 autoComplete="off"
-                placeholder="Start typing… (try: help, clear)"
+                placeholder="Start typing… (try: /help, /clear)"
                 className="min-w-0 flex-1 bg-transparent outline-none placeholder-slate-500 text-slate-100 caret-emerald-400"
                 aria-label="Terminal input"
                 value={input}
