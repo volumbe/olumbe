@@ -5,7 +5,7 @@ import Layout from "../layouts/Layout.astro";
 <Layout title="/terminal">
   <main class="w-full h-full px-0 sm:px-0">
     <section
-      class="relative h-full w-full flex flex-col rounded-none sm:rounded-xl border border-slate-800/70 bg-gradient-to-b from-slate-900/70 to-black/80 shadow-2xl shadow-emerald-500/10 backdrop-blur-md overflow-hidden"
+      class="relative h-full w-full flex flex-col rounded-none border border-slate-800/70 bg-gradient-to-b from-slate-900/70 to-black/80 shadow-2xl shadow-emerald-500/10 backdrop-blur-md overflow-hidden"
     >
       <header
         class="flex items-center justify-between px-4 py-2 border-b border-slate-800/70 bg-slate-900/60"
@@ -40,7 +40,7 @@ import Layout from "../layouts/Layout.astro";
           <div
             class="group flex items-center gap-2 rounded-lg border border-slate-800/70 bg-slate-900/40 px-3 py-2 focus-within:border-emerald-400/60 focus-within:shadow-[0_0_0_3px_rgba(52,211,153,0.15)] transition"
           >
-            <span class="select-none text-emerald-400">guest@olumbe:$</span>
+            <span class="select-none text-emerald-400">guest@olumbe:</span>
             <input
               type="text"
               name="command"
@@ -114,7 +114,7 @@ import Layout from "../layouts/Layout.astro";
       if (!command) return;
 
       // Echo the prompt + command
-      appendLine(`guest@olumbe:$ ${command}`);
+      appendLine(`guest@olumbe: ${command}`);
 
       // Simple built-in commands for UX
       switch (command.toLowerCase()) {
@@ -125,7 +125,8 @@ import Layout from "../layouts/Layout.astro";
           showHelp();
           break;
         default:
-          appendLine(command, "system");
+          // No extra echo for unknown commands; only show the prompt line above
+          break;
       }
     }
 
