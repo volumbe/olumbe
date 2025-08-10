@@ -1,18 +1,26 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from "react";
+
+type OutputLine = {
+  text: string;
+  variant: "system" | "user" | "info";
+};
 
 export default function Terminal() {
-  const [output, setOutput] = useState([
-    { text: "Welcome to the Olumbe terminal.", variant: "system" as const },
-    { text: "Type help for options.", variant: "system" as const },
+  const [output, setOutput] = useState<OutputLine[]>([
+    { text: "Welcome to the Olumbe terminal.", variant: "system" },
+    { text: "Type help for options.", variant: "system" },
   ]);
   const [input, setInput] = useState("");
   const outputRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const appendLine = (text: string, variant: "system" | "user" | "info" = "user") => {
-    setOutput(prev => [...prev, { text, variant }]);
+  const appendLine = (
+    text: string,
+    variant: "system" | "user" | "info" = "user"
+  ) => {
+    setOutput((prev) => [...prev, { text, variant }]);
   };
 
   const showHelp = () => {
@@ -102,8 +110,8 @@ export default function Terminal() {
                     line.variant === "system"
                       ? "text-slate-400"
                       : line.variant === "info"
-                        ? "text-emerald-300"
-                        : "text-slate-100"
+                      ? "text-emerald-300"
+                      : "text-slate-100"
                   }
                 >
                   {line.text}
@@ -114,7 +122,9 @@ export default function Terminal() {
 
           <form className="mt-3" onSubmit={handleSubmit}>
             <div className="group flex items-center gap-2 rounded-lg border border-slate-800/70 bg-slate-900/40 px-3 py-2 focus-within:border-emerald-400/60 focus-within:shadow-[0_0_0_3px_rgba(52,211,153,0.15)] transition">
-              <span className="select-none text-emerald-400">guest@olumbe:</span>
+              <span className="select-none text-emerald-400">
+                guest@olumbe:
+              </span>
               <input
                 ref={inputRef}
                 type="text"

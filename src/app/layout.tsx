@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: {
     default: "/",
-    template: "olumbe/%s",
+    template: "olumbe ~ %s",
   },
   description: "Vivek Olumbe - Backed by Y Combinator, Taught at Penn",
   keywords: [
