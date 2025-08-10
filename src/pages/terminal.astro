@@ -3,7 +3,7 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout title="/terminal">
-  <main class="w-full h-full px-0 sm:px-0">
+  <main class="w-full h-screen px-0 sm:px-0">
     <section
       class="relative h-full w-full flex flex-col rounded-none border border-slate-800/70 bg-gradient-to-b from-slate-900/70 to-black/80 shadow-2xl shadow-emerald-500/10 backdrop-blur-md overflow-hidden"
     >
@@ -21,9 +21,11 @@ import Layout from "../layouts/Layout.astro";
         <div class="w-12" aria-hidden="true"></div>
       </header>
 
-      <div class="p-3 sm:p-4 flex-1 flex flex-col min-h-0">
+      <div
+        class="px-4 pt-0 pb-3 sm:px-4 sm:pt-0 sm:pb-4 flex-1 flex flex-col min-h-0"
+      >
         <div
-          class="font-mono text-sm leading-relaxed text-slate-200/95 flex-1 overflow-y-auto pr-2"
+          class="font-mono text-sm leading-relaxed text-slate-200/95 flex-1 overflow-y-auto pr-2 no-scrollbar"
           data-terminal-output
           aria-live="polite"
           aria-relevant="additions"
@@ -55,7 +57,7 @@ import Layout from "../layouts/Layout.astro";
       </div>
 
       <div
-        class="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-white/5"
+        class="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/5"
       >
       </div>
     </section>
@@ -158,13 +160,22 @@ import Layout from "../layouts/Layout.astro";
     @tailwind components;
     @tailwind utilities;
 
+    /* Hide scrollbar but keep scroll functionality */
+    .no-scrollbar {
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
+    }
+
     /* Subtle vignette */
     section::after {
       content: "";
       position: absolute;
       inset: 0;
       pointer-events: none;
-      border-radius: 0.75rem;
+      border-radius: 0;
       box-shadow: inset 0 0 80px rgba(2, 6, 23, 0.9);
     }
   </style>
