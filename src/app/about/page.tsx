@@ -11,6 +11,7 @@ export const metadata = {
   title: "about",
 };
 
+const newLocal = "Personal finance education nonprofit.";
 const startups = [
   {
     title: "Affil.ai",
@@ -36,7 +37,7 @@ const startups = [
   },
   {
     title: "Common Cents",
-    description: "Personal finance education nonprofit.",
+    description: newLocal,
     href: "https://commoncents.org",
     image: CC,
     bgColor: "bg-gradient-to-br from-zinc-300 from-33% to-slate-400",

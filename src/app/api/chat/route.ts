@@ -9,7 +9,7 @@ export async function POST(req: Request) {
 
   const result = streamText({
     model: google('gemini-2.5-flash'),
-    system: 'You are a helpful assistant.',
+    system: 'You are a helpful assistant. Respond in all lowercase. Do not use any markdown formatting. Response concisely.',
     messages: convertToModelMessages(messages),
   });
 

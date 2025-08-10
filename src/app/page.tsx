@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
 
 type OutputLine = {
   text: string;
@@ -16,6 +18,10 @@ export default function Terminal() {
   const [input, setInput] = useState("");
   const outputRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const { messages, sendMessage, status, stop } = useChat({
+    transport: new DefaultChatTransport({ api: "/api/chat" }),
+  });
 
   type CommandHelp = { name: string; description: string };
   const availableCommands: CommandHelp[] = [
@@ -51,12 +57,14 @@ export default function Terminal() {
     const trimmedCommand = command.trim();
     if (!trimmedCommand) return;
 
-    appendLine(`guest@olumbe: ${trimmedCommand}`);
-
+    // Non-command input goes to chat endpoint
     if (!trimmedCommand.startsWith("/")) {
-      appendLine("Commands must start with '/'. Try /help.", "system");
+      sendMessage({ text: trimmedCommand });
       return;
     }
+
+    // For commands, echo the command to the terminal output
+    appendLine(`guest@olumbe: ${trimmedCommand}`);
 
     const normalized = trimmedCommand.slice(1).toLowerCase();
 
@@ -143,6 +151,19 @@ export default function Terminal() {
                   {line.text}
                 </li>
               ))}
+              {/* Streamed AI chat transcript */}
+              {messages.map((m) => (
+                <li key={m.id} className="text-slate-100">
+                  <span className="text-emerald-300 mr-2">
+                    {m.role === "user" ? "guest@olumbe:" : "vivek@olumbe:"}
+                  </span>
+                  {m.parts.map((part, idx) =>
+                    part.type === "text" ? (
+                      <span key={idx}>{part.text}</span>
+                    ) : null
+                  )}
+                </li>
+              ))}
             </ol>
           </div>
 
@@ -223,6 +244,20 @@ export default function Terminal() {
                 </motion.div>
               )}
             </AnimatePresence>
+            {(status === "submitted" || status === "streaming") && (
+              <div className="mb-2 flex items-center gap-3">
+                {status === "submitted" && (
+                  <span className="text-slate-400 text-xs">Sending…</span>
+                )}
+                <button
+                  type="button"
+                  onClick={() => stop()}
+                  className="rounded border border-rose-500/50 bg-rose-500/10 px-2 py-1 text-xs text-rose-300 hover:bg-rose-500/20"
+                >
+                  Stop
+                </button>
+              </div>
+            )}
             <div className="group flex items-center gap-2 rounded-lg border border-slate-800/70 bg-slate-900/40 px-3 py-2 focus-within:border-emerald-400/60 focus-within:shadow-[0_0_0_3px_rgba(52,211,153,0.15)] transition">
               <span className="select-none text-emerald-400">
                 guest@olumbe:
