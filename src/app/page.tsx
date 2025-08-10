@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 type OutputLine = {
   text: string;
@@ -21,6 +22,16 @@ export default function Terminal() {
     { name: "/help", description: "Show this help" },
     { name: "/clear", description: "Clear the terminal" },
   ];
+
+  const filteredCommands: CommandHelp[] = (() => {
+    const trimmed = input.trim();
+    if (!trimmed.startsWith("/")) return [];
+    const query = trimmed.slice(1).toLowerCase();
+    if (query.length === 0) return availableCommands;
+    return availableCommands.filter((cmd) =>
+      cmd.name.slice(1).toLowerCase().startsWith(query)
+    );
+  })();
 
   const appendLine = (
     text: string,
@@ -136,26 +147,83 @@ export default function Terminal() {
           </div>
 
           <form className="mt-3" onSubmit={handleSubmit}>
-            <div className="group relative flex items-center gap-2 rounded-lg border border-slate-800/70 bg-slate-900/40 px-3 py-2 focus-within:border-emerald-400/60 focus-within:shadow-[0_0_0_3px_rgba(52,211,153,0.15)] transition">
+            <AnimatePresence>
               {input.trim().startsWith("/") && (
-                <div className="absolute left-0 right-0 -top-2 translate-y-[-100%] z-10 rounded-md border border-slate-800/70 bg-slate-900/95 backdrop-blur px-3 py-2 shadow-xl">
+                <motion.div
+                  key="cmd-tooltip"
+                  initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 500,
+                    damping: 32,
+                    mass: 0.6,
+                  }}
+                  className="mb-2 rounded-md border border-slate-800/70 bg-slate-900/95 backdrop-blur px-3 py-2 shadow-xl"
+                >
                   <p className="text-[0.7rem] uppercase tracking-wider text-slate-400 mb-1">
                     Available commands
                   </p>
-                  <ul className="text-sm font-mono text-slate-100 space-y-1">
-                    {availableCommands.map((cmd) => (
-                      <li key={cmd.name} className="flex items-center gap-2">
-                        <span className="text-emerald-300 whitespace-nowrap">
-                          {cmd.name}
-                        </span>
-                        <span className="text-slate-400">
-                          - {cmd.description}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                  <motion.ul
+                    layout
+                    initial="hidden"
+                    animate="show"
+                    exit="hidden"
+                    variants={{
+                      hidden: {
+                        transition: {
+                          staggerChildren: 0.015,
+                          staggerDirection: -1,
+                        },
+                      },
+                      show: { transition: { staggerChildren: 0.04 } },
+                    }}
+                    className="text-sm font-mono text-slate-100 space-y-1"
+                  >
+                    <AnimatePresence initial={false} mode="popLayout">
+                      {(filteredCommands.length > 0
+                        ? filteredCommands
+                        : availableCommands
+                      ).map((cmd) => (
+                        <motion.li
+                          key={cmd.name}
+                          layout
+                          initial={{ opacity: 0, y: -6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -6 }}
+                          transition={{ duration: 0.15, ease: "easeOut" }}
+                          className="flex items-center gap-2"
+                        >
+                          <span className="text-emerald-300 whitespace-nowrap">
+                            {cmd.name}
+                          </span>
+                          <span className="text-slate-400">
+                            - {cmd.description}
+                          </span>
+                        </motion.li>
+                      ))}
+                      {filteredCommands.length === 0 &&
+                        input.trim().startsWith("/") &&
+                        input.trim().length > 1 && (
+                          <motion.li
+                            key="no-match"
+                            layout
+                            initial={{ opacity: 0, y: -6 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -6 }}
+                            transition={{ duration: 0.15, ease: "easeOut" }}
+                            className="text-slate-400"
+                          >
+                            No matching commands
+                          </motion.li>
+                        )}
+                    </AnimatePresence>
+                  </motion.ul>
+                </motion.div>
               )}
+            </AnimatePresence>
+            <div className="group flex items-center gap-2 rounded-lg border border-slate-800/70 bg-slate-900/40 px-3 py-2 focus-within:border-emerald-400/60 focus-within:shadow-[0_0_0_3px_rgba(52,211,153,0.15)] transition">
               <span className="select-none text-emerald-400">
                 guest@olumbe:
               </span>
