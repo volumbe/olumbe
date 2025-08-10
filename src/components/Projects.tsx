@@ -1,5 +1,8 @@
+'use client';
+
 import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion'
+import Image, { StaticImageData } from 'next/image';
 import Card from './Card';
 import { cn } from '../utils';
 import Selfie from '../images/selfie.png';
@@ -9,7 +12,7 @@ type Project = {
     description: string;
     href: string;
     bgColor: string;
-    image?: string;
+    image?: StaticImageData;
 }
 
 export const Projects = ({ startups } : { startups: Project[] }) => {
@@ -24,8 +27,8 @@ export const Projects = ({ startups } : { startups: Project[] }) => {
     });
 
     const [windowSize, setWindowSize] = useState({
-        width: window.innerWidth,
-        height: window.innerHeight,
+        width: typeof window !== 'undefined' ? window.innerWidth : 0,
+        height: typeof window !== 'undefined' ? window.innerHeight : 0,
     });
 
     const handleResize = () => {
@@ -162,7 +165,7 @@ const Avatar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (b: boolean
             initial="hidden"
             animate={isOpen ? "show" : "hidden"}>
             <div className="flex flex-col items-center justify-center">
-                <img src={Selfie.src} alt="Selfie" loading="eager" className="object-cover rounded-xl aspect-[5/4] h-48 sm:h-52 drop-shadow-2xl" onClick={() => setIsOpen(false)} />
+                <Image src={Selfie} alt="Selfie" className="object-cover rounded-xl aspect-[5/4] h-48 sm:h-52 drop-shadow-2xl cursor-pointer" onClick={() => setIsOpen(false)} />
                 <svg width={1} height={15} className='h-2 sm:h-5'>
                     <line
                         strokeLinecap={"round"}
