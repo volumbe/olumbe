@@ -9,86 +9,88 @@ import Shipp from "../images/Shipp.png";
 import CC from "../images/CC-white.png";
 import Affil from "../images/Affil.png";
 
-const BLACKIVYImage = await getImage({ src: BLACKIVY});
-const shippImage = await getImage({ src: Shipp});
-const CCImage = await getImage({ src: CC});
+const BLACKIVYImage = await getImage({ src: BLACKIVY });
+const shippImage = await getImage({ src: Shipp });
+const CCImage = await getImage({ src: CC });
 const AffilImage = await getImage({ src: Affil });
 const startups = [
-    {
-        title: "Affil.ai",
-        description: "AI-powered financial affiliate network.",
-        href: "https://affil.ai",
-		image: AffilImage.src,
-        bgColor: "bg-gradient-to-br from-blue-950 to-blue-900 hover:bg-gradient-to-tl",
-    },
-    {
-        title: "BLACKIVY",
-        description: "Alumni club for brillant black minds.",
-        href: "https://blkivy.club/",
-        image: BLACKIVYImage.src,
-        bgColor: "bg-gradient-to-b from-black to-slate-600",
-    },
-    {
-        title: "Shipp",
-        description: "Online dating sucks. Meet IRL.",
-        href: "https://apps.apple.com/us/app/shipp-dating-app/id6445876197",
-        image: shippImage.src,
-        bgColor: "bg-gradient-to-b from-amber-50 from-50% to-[#50C4BF]",
-    },
-    {
-        title: "Common Cents",
-        description: "Personal finance education nonprofit.",
-        href: "https://commoncents.org",
-        image: CCImage.src,
-        bgColor: "bg-gradient-to-br from-zinc-300 from-33% to-slate-400",
-    },
-]
-
+  {
+    title: "Affil.ai",
+    description: "AI-powered financial affiliate network.",
+    href: "https://affil.ai",
+    image: AffilImage.src,
+    bgColor:
+      "bg-gradient-to-br from-blue-950 to-blue-900 hover:bg-gradient-to-tl",
+  },
+  {
+    title: "BLACKIVY",
+    description: "Alumni club for brillant black minds.",
+    href: "https://blkivy.club/",
+    image: BLACKIVYImage.src,
+    bgColor: "bg-gradient-to-b from-black to-slate-600",
+  },
+  {
+    title: "Shipp",
+    description: "Online dating sucks. Meet IRL.",
+    href: "https://apps.apple.com/us/app/shipp-dating-app/id6445876197",
+    image: shippImage.src,
+    bgColor: "bg-gradient-to-b from-amber-50 from-50% to-[#50C4BF]",
+  },
+  {
+    title: "Common Cents",
+    description: "Personal finance education nonprofit.",
+    href: "https://commoncents.org",
+    image: CCImage.src,
+    bgColor: "bg-gradient-to-br from-zinc-300 from-33% to-slate-400",
+  },
+];
 ---
 
-<Layout title="vivek">
-	<main class="flex flex-col px-8 text-center w-full max-w-screen-lg h-fit max-h-screen">
-		<h1 class="name [--slidein-delay:200ms]">Vivek Olumbe</h1>
-		<div class="flex flex-col gap-3 sm:gap-6 text-center items-center mb-4">
-			<p class="badge opacity-0 [--slidein-delay:300ms]">
-				Backed by <Image
-					src={YC}
-					alt="Y Combinator"
-					class="logo"
-					loading={"eager"}
-				/>
-				<span class="text-[#E96F37]">Combinator</span>
-			</p>
-			<p class="badge [--slidein-delay:400ms]">
-				Taught at <Image
-					src={Penn}
-					alt="UPenn"
-					class="logo"
-					loading={"eager"}
-				/>
-				<span class="text-[#011F5B]">Penn</span>
-			</p>
-			<p class="badge [--slidein-delay:500ms]">Raised in Philly</p>
-			<p class="badge [--slidein-delay:600ms]">Made in 🌍</p>
-		</div>
-		<Projects startups={startups} client:only/>
-	</main>
+<Layout title="/">
+  <main
+    class="flex flex-col px-8 text-center w-full max-w-screen-lg h-fit max-h-screen"
+  >
+    <h1 class="name [--slidein-delay:200ms]">Vivek Olumbe</h1>
+    <div class="flex flex-col gap-3 sm:gap-6 text-center items-center mb-4">
+      <p class="badge opacity-0 [--slidein-delay:300ms]">
+        Backed by <Image
+          src={YC}
+          alt="Y Combinator"
+          class="logo"
+          loading={"eager"}
+        />
+        <span class="text-[#E96F37]">Combinator</span>
+      </p>
+      <p class="badge [--slidein-delay:400ms]">
+        Taught at <Image
+          src={Penn}
+          alt="UPenn"
+          class="logo"
+          loading={"eager"}
+        />
+        <span class="text-[#011F5B]">Penn</span>
+      </p>
+      <p class="badge [--slidein-delay:500ms]">Raised in Philly</p>
+      <p class="badge [--slidein-delay:600ms]">Made in 🌍</p>
+    </div>
+    <Projects startups={startups} client:only />
+  </main>
 </Layout>
 
 <style>
-	@tailwind base;
-	@tailwind components;
-	@tailwind utilities;
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
 
-	@layer components {
-		.name {
-			@apply text-4xl sm:text-5xl font-extrabold tracking-wide uppercase animate-slidein opacity-0 text-center pb-8 z-40;
-		}
-		.badge {
-			@apply flex items-center gap-1 bg-slate-200 bg-opacity-40 w-fit px-4 py-[0.1rem] rounded-full justify-center animate-slidein opacity-0;
-		}
-		.logo {
-			@apply inline rounded-sm object-cover w-4;
-		}
-	}
+  @layer components {
+    .name {
+      @apply text-4xl sm:text-5xl font-extrabold tracking-wide uppercase animate-slidein opacity-0 text-center pb-8 z-40;
+    }
+    .badge {
+      @apply flex items-center gap-1 bg-slate-200 bg-opacity-40 w-fit px-4 py-[0.1rem] rounded-full justify-center animate-slidein opacity-0;
+    }
+    .logo {
+      @apply inline rounded-sm object-cover w-4;
+    }
+  }
 </style>

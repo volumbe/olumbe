@@ -1,0 +1,7 @@
+---
+description: Global rules
+alwaysApply: true
+---
+
+- Do not run build or dev commands unless explicitly asked to by the user.
+- After making code changes, run the project's typecheck and lint commands to ensure everything is still working.
