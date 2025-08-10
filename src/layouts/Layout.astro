@@ -7,7 +7,10 @@ const { title } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html
+  lang="en"
+  class="min-h-screen bg-black bg-gradient-to-b from-slate-900/70 to-black/80"
+>
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content="Astro description" />
@@ -43,7 +46,7 @@ const { title } = Astro.props;
     </style>
   </head>
   <body
-    class="font-sans min-h-screen min-w-screen size-full flex flex-col items-center justify-center bg-gradient-to-b from-slate-900/70 to-black/80"
+    class="font-sans min-h-screen min-w-screen size-full flex flex-col items-center justify-center"
   >
     <slot />
   </body>
