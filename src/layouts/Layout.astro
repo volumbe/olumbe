@@ -1,5 +1,4 @@
 ---
-import '@fontsource/ubuntu';
 
 interface Props {
 	title: string;
@@ -26,8 +25,19 @@ const { title } = Astro.props;
 		<meta name="theme-color" content="#ffffff">
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+
+        <link rel="preload" href="/juxel.ttf" as="font" type="font/ttf" crossorigin>
+        <style is:global>
+            @font-face {
+                font-family: 'Juxel';
+                src: url('/juxel.ttf') format('truetype');
+                font-weight: 100 900;
+                font-style: normal;
+                font-display: swap;
+            }
+        </style>
 	</head>
-	<body class="h-[95vh] sm:h-screen w-screen flex flex-col items-center justify-center p-1">
+    <body class="font-sans h-[95vh] sm:h-screen w-screen flex flex-col items-center justify-center p-1">
 		<slot />
 	</body>
 </html>

@@ -7,7 +7,7 @@ export default {
 	theme: {
 		extend: {
 			fontFamily: {
-				sans: ['Ubuntu', ...defaultTheme.fontFamily.sans],
+                sans: ['Juxel', ...defaultTheme.fontFamily.sans],
 			  },
 			keyframes: {
 				slidein: {
