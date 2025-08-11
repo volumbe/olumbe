@@ -1,0 +1,22 @@
+.pixelMapContainer {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* Make raster tiles use nearest-neighbor scaling for a pixelated look */
+.pixelMapContainer :global(.leaflet-tile) {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.pixelMapContainer :global(canvas),
+.pixelMapContainer :global(img) {
+  image-rendering: pixelated;
+}
+
+.mapRoot {
+  width: 100%;
+  height: 100%;
+}

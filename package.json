@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "map-db:pull": "cd src/packages/map/db && pnpm drizzle-kit pull --config=drizzle-map.config.ts"
   },
   "dependencies": {
     "@ai-sdk/google": "^2.0.3",
@@ -15,20 +16,28 @@
     "@fontsource/ubuntu": "^5.0.13",
     "ai": "^5.0.9",
     "clsx": "^2.1.1",
+    "dotenv": "^17.2.1",
+    "drizzle-orm": "^0.44.4",
     "framer-motion": "^11.2.10",
+    "leaflet": "^1.9.4",
     "next": "^15.0.0",
+    "postgres": "^3.4.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-leaflet": "^4.2.1",
     "tailwind-merge": "^2.3.0"
   },
   "devDependencies": {
+    "@types/leaflet": "^1.9.9",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "drizzle-kit": "^0.31.4",
     "eslint": "^8",
     "eslint-config-next": "15.0.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.4",
+    "tsx": "^4.20.3",
     "typescript": "^5"
   }
 }
