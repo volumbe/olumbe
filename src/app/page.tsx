@@ -1,27 +1,34 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
+import { ChatMessage } from "./types";
 
 type OutputLine = {
   text: string;
   variant: "system" | "user" | "info";
+  createdAt: number;
 };
 
 export default function Terminal() {
   const [output, setOutput] = useState<OutputLine[]>([
-    { text: "Welcome to the Olumbe terminal.", variant: "system" },
-    { text: "Type /help for options.", variant: "system" },
+    {
+      text: "Type /help for options.",
+      variant: "system",
+      createdAt: Date.now(),
+    },
   ]);
   const [input, setInput] = useState("");
   const outputRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const messageTimestampsRef = useRef<Map<string, number>>(new Map());
 
-  const { messages, sendMessage, status, stop } = useChat({
-    transport: new DefaultChatTransport({ api: "/api/chat" }),
-  });
+  const { messages, sendMessage, status, stop, setMessages } =
+    useChat<ChatMessage>({
+      transport: new DefaultChatTransport({ api: "/api/chat" }),
+    });
 
   type CommandHelp = { name: string; description: string };
   const availableCommands: CommandHelp[] = [
@@ -43,7 +50,7 @@ export default function Terminal() {
     text: string,
     variant: "system" | "user" | "info" = "user"
   ) => {
-    setOutput((prev) => [...prev, { text, variant }]);
+    setOutput((prev) => [...prev, { text, variant, createdAt: Date.now() }]);
   };
 
   const showHelp = () => {
@@ -59,7 +66,10 @@ export default function Terminal() {
 
     // Non-command input goes to chat endpoint
     if (!trimmedCommand.startsWith("/")) {
-      sendMessage({ text: trimmedCommand });
+      sendMessage({
+        text: trimmedCommand,
+        metadata: { createdAt: Date.now() },
+      });
       return;
     }
 
@@ -71,6 +81,9 @@ export default function Terminal() {
     switch (normalized) {
       case "clear":
         setOutput([]);
+        setMessages([]);
+        messageTimestampsRef.current.clear();
+        stop();
         break;
       case "help":
         showHelp();
@@ -111,6 +124,56 @@ export default function Terminal() {
     inputRef.current?.focus();
   };
 
+  const getMessageCreatedAt = (m: ChatMessage): number => {
+    const ts = m?.metadata?.createdAt;
+    if (typeof ts === "number") return ts;
+    const existing = messageTimestampsRef.current.get(m.id);
+    if (existing !== undefined) return existing;
+    const now = Date.now();
+    messageTimestampsRef.current.set(m.id, now);
+    return now;
+  };
+
+  const mergedItems = useMemo(() => {
+    const chatItems = messages.map((m) => ({
+      createdAt: getMessageCreatedAt(m),
+      key: `chat-${m.id}`,
+      jsx: (
+        <li key={`chat-${m.id}`} className="text-slate-100">
+          <span className="text-emerald-300 mr-2">
+            {m.role === "user" ? "guest@olumbe:" : "vivek@olumbe:"}
+          </span>
+          {m.parts.map((part, idx) =>
+            part.type === "text" ? <span key={idx}>{part.text}</span> : null
+          )}
+        </li>
+      ),
+    }));
+
+    const outputItems = output.map((line, index) => ({
+      createdAt: line.createdAt,
+      key: `out-${index}-${line.createdAt}`,
+      jsx: (
+        <li
+          key={`out-${index}-${line.createdAt}`}
+          className={
+            line.variant === "system"
+              ? "text-slate-400"
+              : line.variant === "info"
+              ? "text-emerald-300"
+              : "text-slate-100"
+          }
+        >
+          {line.text}
+        </li>
+      ),
+    }));
+
+    return [...chatItems, ...outputItems].sort(
+      (a, b) => a.createdAt - b.createdAt
+    );
+  }, [messages, output]);
+
   return (
     <main className="w-full h-screen px-0 sm:px-0">
       <section
@@ -136,35 +199,7 @@ export default function Terminal() {
             aria-live="polite"
             aria-relevant="additions"
           >
-            <ol className="space-y-1">
-              {output.map((line, index) => (
-                <li
-                  key={index}
-                  className={
-                    line.variant === "system"
-                      ? "text-slate-400"
-                      : line.variant === "info"
-                      ? "text-emerald-300"
-                      : "text-slate-100"
-                  }
-                >
-                  {line.text}
-                </li>
-              ))}
-              {/* Streamed AI chat transcript */}
-              {messages.map((m) => (
-                <li key={m.id} className="text-slate-100">
-                  <span className="text-emerald-300 mr-2">
-                    {m.role === "user" ? "guest@olumbe:" : "vivek@olumbe:"}
-                  </span>
-                  {m.parts.map((part, idx) =>
-                    part.type === "text" ? (
-                      <span key={idx}>{part.text}</span>
-                    ) : null
-                  )}
-                </li>
-              ))}
-            </ol>
+            <ol className="space-y-1">{mergedItems.map((item) => item.jsx)}</ol>
           </div>
 
           <form className="mt-3" onSubmit={handleSubmit}>
