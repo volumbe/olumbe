@@ -65,7 +65,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className="min-h-screen bg-black bg-gradient-to-b from-slate-900/70 to-black/80"
+      className="h-dvh w-screen bg-black bg-gradient-to-b from-slate-900/70 to-black/80"
     >
       <head>
         <link
