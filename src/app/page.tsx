@@ -22,7 +22,7 @@ export default function Terminal() {
   ]);
   const [input, setInput] = useState("");
   const outputRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const messageTimestampsRef = useRef<Map<string, number>>(new Map());
 
   const { messages, sendMessage, status, stop, setMessages } =
@@ -107,6 +107,12 @@ export default function Terminal() {
     }
   };
 
+  const resizeTextArea = (el: HTMLTextAreaElement | null) => {
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
+  };
+
   useEffect(() => {
     const container = outputRef.current;
     if (!container) return;
@@ -118,7 +124,12 @@ export default function Terminal() {
 
   useEffect(() => {
     inputRef.current?.focus();
+    resizeTextArea(inputRef.current);
   }, []);
+
+  useEffect(() => {
+    resizeTextArea(inputRef.current);
+  }, [input]);
 
   const handleTerminalClick = () => {
     inputRef.current?.focus();
@@ -293,20 +304,21 @@ export default function Terminal() {
                 </button>
               </div>
             )}
-            <div className="group flex items-center gap-2 rounded-lg border border-slate-800/70 bg-slate-900/40 px-3 py-2 focus-within:border-emerald-400/60 focus-within:shadow-[0_0_0_3px_rgba(52,211,153,0.15)] transition">
+            <div className="group flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-2 rounded-lg border border-slate-800/70 bg-slate-900/40 px-3 py-2 focus-within:border-emerald-400/60 focus-within:shadow-[0_0_0_3px_rgba(52,211,153,0.15)] transition">
               <span className="select-none text-emerald-400">
                 guest@olumbe:
               </span>
-              <input
+              <textarea
                 ref={inputRef}
-                type="text"
+                rows={1}
                 name="command"
                 autoComplete="off"
                 placeholder="Start typing… (try: /help, /clear)"
-                className="min-w-0 flex-1 bg-transparent outline-none placeholder-slate-500 text-slate-100 caret-emerald-400"
+                className="min-w-0 w-full sm:flex-1 bg-transparent outline-none placeholder-slate-500 text-slate-100 caret-emerald-400 resize-none overflow-hidden"
                 aria-label="Terminal input"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
+                onInput={(e) => resizeTextArea(e.currentTarget)}
                 onKeyDown={handleKeyDown}
               />
             </div>
