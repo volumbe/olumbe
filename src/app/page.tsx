@@ -108,13 +108,13 @@ export default function Terminal() {
   };
 
   useEffect(() => {
-    if (outputRef.current) {
-      outputRef.current.scrollTo({
-        top: outputRef.current.scrollHeight,
-        behavior: "smooth",
-      });
-    }
-  }, [output]);
+    const container = outputRef.current;
+    if (!container) return;
+    container.scrollTo({
+      top: container.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [messages, output]);
 
   useEffect(() => {
     inputRef.current?.focus();
