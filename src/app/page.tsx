@@ -5,7 +5,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { ChatMessage } from "./types";
-import ElapsedTimer from "@/components/ElapsedTimer";
 
 type OutputLine = {
   text: string;
@@ -187,22 +186,11 @@ export default function Terminal() {
   }, [messages, output]);
 
   return (
-    <main className="w-full h-screen px-0 sm:px-0">
+    <main className="w-full h-full px-0 sm:px-0">
       <section
-        className="relative h-full w-full flex flex-col rounded-none border border-slate-800/70 bg-gradient-to-b from-slate-900/70 to-black/80 shadow-2xl shadow-emerald-500/10 backdrop-blur-md overflow-hidden"
+        className="relative h-full w-full flex flex-col rounded-none border-t border-slate-800/70 bg-gradient-to-b from-slate-900/70 to-black/80 shadow-2xl shadow-emerald-500/10 backdrop-blur-md overflow-hidden"
         onClick={handleTerminalClick}
       >
-        <header className="flex items-center justify-between px-4 py-2 border-b border-slate-800/70 bg-slate-900/60">
-          <div className="flex items-center gap-2">
-            <span className="h-3 w-3 rounded-full bg-red-500/80"></span>
-            <span className="h-3 w-3 rounded-full bg-amber-400/80"></span>
-            <span className="h-3 w-3 rounded-full bg-emerald-400/80"></span>
-          </div>
-          <p className="text-[0.8rem] text-slate-300/80 font-medium tracking-wide">
-            guest@olumbe
-          </p>
-          <ElapsedTimer />
-        </header>
 
         <div className="px-4 pt-0 pb-3 sm:px-4 sm:pt-0 sm:pb-4 flex-1 flex flex-col min-h-0">
           <div

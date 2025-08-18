@@ -140,11 +140,11 @@ const lineStyle = {
 };
 
 const gradientStop1 = {
-    stopColor: "rgb(100% 76.471% 44.314%)"
+    stopColor: "oklch(0.696 0.17 162.48)"
 }
 
 const gradientStop2 = {
-    stopColor: "rgb(255, 95, 109)"
+    stopColor: "oklch(0.508 0.118 165.612)"
 }
 
 const Avatar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (b: boolean) => void }) => {

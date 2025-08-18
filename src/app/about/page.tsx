@@ -1,7 +1,4 @@
-import Image from "next/image";
 import { Projects } from "@/components/Projects";
-import YC from "@/images/y18.svg";
-import Penn from "@/images/penn.png";
 import BLACKIVY from "@/images/BLACKIVY.png";
 import Shipp from "@/images/Shipp.png";
 import CC from "@/images/CC-white.png";
@@ -11,11 +8,10 @@ export const metadata = {
   title: "about",
 };
 
-const newLocal = "Personal finance education nonprofit.";
 const startups = [
   {
     title: "Affil.ai",
-    description: "AI-powered financial affiliate network.",
+    description: "AI-powered credit card marketing.",
     href: "https://affil.ai",
     image: Affil,
     bgColor:
@@ -23,10 +19,10 @@ const startups = [
   },
   {
     title: "BLACKIVY",
-    description: "Alumni club for brillant black minds.",
-    href: "https://blkivy.club/",
+    description: "Alumni club for black minds.",
+    href: "https://www.blackivyclub.us",
     image: BLACKIVY,
-    bgColor: "bg-gradient-to-b from-black to-slate-600",
+    bgColor: "bg-black",
   },
   {
     title: "Shipp",
@@ -37,18 +33,18 @@ const startups = [
   },
   {
     title: "Common Cents",
-    description: newLocal,
+    description: "Personal finance education nonprofit.",
     href: "https://commoncents.org",
     image: CC,
-    bgColor: "bg-gradient-to-br from-zinc-300 from-33% to-slate-400",
+    bgColor: "bg-gradient-to-br from-zinc-500 from-33% to-blue-300",
   },
 ];
 
 export default function AboutPage() {
   return (
     <main className="flex flex-col px-8 text-center text-white w-full max-w-screen-lg h-fit max-h-screen">
-      <h1 className="name [--slidein-delay:200ms]">Vivek Olumbe</h1>
-      <div className="flex flex-col gap-3 sm:gap-6 text-center items-center mb-4">
+      <h1 className="name [--slidein-delay:200ms]">Vivek E. Olumbe</h1>
+      {/* <div className="flex flex-col gap-3 sm:gap-6 text-center items-center mb-4">
         <p className="badge opacity-0 [--slidein-delay:300ms]">
           Backed by{" "}
           <Image src={YC} alt="Y Combinator" className="logo" loading="eager" />
@@ -61,7 +57,7 @@ export default function AboutPage() {
         </p>
         <p className="badge [--slidein-delay:500ms]">Raised in Philly</p>
         <p className="badge [--slidein-delay:600ms]">Made in 🌍</p>
-      </div>
+      </div> */}
       <Projects startups={startups} />
     </main>
   );

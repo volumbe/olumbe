@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "leaflet/dist/leaflet.css";
 import "./globals.css";
 import { ConvexClientProvider } from "@/components/convex-provider";
+import TerminalHeader from "@/components/TerminalHeader";
 
 export const metadata: Metadata = {
   title: {
@@ -79,10 +80,13 @@ export default function RootLayout({
         />
         <meta name="theme-color" content="#ffffff" />
       </head>
-      <body className="font-sans min-h-screen min-w-screen size-full flex flex-col items-center justify-center">
-        <ConvexClientProvider>
-          {children}
-        </ConvexClientProvider>
+      <body className="font-sans min-h-screen min-w-screen size-full flex flex-col">
+        <TerminalHeader />
+        <div className="flex-1 flex items-center justify-center">
+          <ConvexClientProvider>
+            {children}
+          </ConvexClientProvider>
+        </div>
       </body>
     </html>
   );
