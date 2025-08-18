@@ -15,7 +15,7 @@ export async function generateMetadata({
   if (!document) {
     return { title: "doc" };
   }
-  return { title: `doc/${document?.title}.txt` };
+  return { title: `docs/${document?.title}.txt` };
 }
 
 export default async function Page({

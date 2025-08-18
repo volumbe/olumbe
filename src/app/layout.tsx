@@ -7,7 +7,7 @@ import TerminalHeader from "@/components/TerminalHeader";
 export const metadata: Metadata = {
   title: {
     default: "/",
-    template: "olumbe ~ %s",
+    template: "/%s",
   },
   description: "Vivek Olumbe - Backed by Y Combinator, Taught at Penn",
   keywords: [
@@ -83,9 +83,7 @@ export default function RootLayout({
       <body className="font-sans min-h-screen min-w-screen size-full flex flex-col">
         <TerminalHeader />
         <div className="flex-1 flex items-center justify-center">
-          <ConvexClientProvider>
-            {children}
-          </ConvexClientProvider>
+          <ConvexClientProvider>{children}</ConvexClientProvider>
         </div>
       </body>
     </html>
