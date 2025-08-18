@@ -139,7 +139,7 @@ export function EditorProvider(props: EditorProviderProps) {
   }
 
   return (
-    <div className="notion-like-editor-wrapper container sm:py-8">
+    <div className="notion-like-editor-wrapper container py-8">
       <TiptapEditorProvider
         immediatelyRender={false}
         editorProps={{
