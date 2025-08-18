@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { ChatMessage } from "./types";
+import ElapsedTimer from "@/components/ElapsedTimer";
 
 type OutputLine = {
   text: string;
@@ -200,7 +201,7 @@ export default function Terminal() {
           <p className="text-[0.8rem] text-slate-300/80 font-medium tracking-wide">
             guest@olumbe
           </p>
-          <div className="w-12" aria-hidden="true"></div>
+          <ElapsedTimer />
         </header>
 
         <div className="px-4 pt-0 pb-3 sm:px-4 sm:pt-0 sm:pb-4 flex-1 flex flex-col min-h-0">
