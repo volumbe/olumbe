@@ -68,7 +68,6 @@ import { NotionToolbarFloating } from "@/components/tiptap-templates/notion-like
 import { Id } from "@/convex/_generated/dataModel";
 import { api } from "@/convex/_generated/api";
 
-
 export interface EditorProviderProps {
   placeholder?: string;
   documentId: Id<"documents">;
@@ -140,7 +139,7 @@ export function EditorProvider(props: EditorProviderProps) {
   }
 
   return (
-    <div className="notion-like-editor-wrapper">
+    <div className="notion-like-editor-wrapper container sm:py-8">
       <TiptapEditorProvider
         immediatelyRender={false}
         editorProps={{
@@ -203,7 +202,6 @@ export function EditorProvider(props: EditorProviderProps) {
           sync.extension,
         ]}
       >
-        <NotionEditorHeader />
         <EditorContentArea />
       </TiptapEditorProvider>
     </div>
@@ -218,11 +216,9 @@ export function NotionEditor({
   placeholder = "Start writing...",
 }: EditorProviderProps) {
   return (
-    <UserProvider>
-      <AppProvider>
-        <NotionEditorContent placeholder={placeholder} documentId={documentId} />
-      </AppProvider>
-    </UserProvider>
+    <AppProvider>
+      <NotionEditorContent placeholder={placeholder} documentId={documentId} />
+    </AppProvider>
   );
 }
 

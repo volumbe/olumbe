@@ -15,7 +15,7 @@ import "@/components/tiptap-templates/notion-like/notion-like-editor-header.scss
 
 export function NotionEditorHeader() {
   return (
-    <header className="notion-like-editor-header">
+    <header className="notion-like-editor-header fixed top-0 left-0 right-0 z-10">
       <Spacer />
       <div className="notion-like-editor-header-actions">
         <ButtonGroup orientation="horizontal">

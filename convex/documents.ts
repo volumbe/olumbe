@@ -52,16 +52,20 @@ export const get = query({
   handler: async (ctx, { search, paginationOpts }) => {
     // No authentication - return all documents
     if (search) {
-      return await ctx.db
-        .query("documents")
-        .withSearchIndex("search_title", (q) => q.search("title", search))
-        .paginate(paginationOpts);
+      return (
+        (await ctx.db
+          .query("documents")
+          .withSearchIndex("search_title", (q) => q.search("title", search))
+          .paginate(paginationOpts)) ?? []
+      );
     }
 
-    return await ctx.db
-      .query("documents")
-      .order("desc")
-      .paginate(paginationOpts);
+    return (
+      (await ctx.db
+        .query("documents")
+        .order("desc")
+        .paginate(paginationOpts)) ?? []
+    );
   },
 });
 
