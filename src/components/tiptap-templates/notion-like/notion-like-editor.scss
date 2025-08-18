@@ -52,6 +52,23 @@ body,
 
 .tiptap.ProseMirror {
   font-family: "DM Sans", sans-serif;
+  
+  // Force visible text selection with white background
+  ::selection {
+    background-color: rgba(255, 255, 255, 0.4) !important;
+    color: rgba(0, 0, 0, 1) !important;
+  }
+  
+  ::-moz-selection {
+    background-color: rgba(255, 255, 255, 0.4) !important;
+    color: rgba(0, 0, 0, 1) !important;
+  }
+  
+  // Make selected text more visible
+  .selection {
+    background-color: rgba(255, 255, 255, 0.4) !important;
+    color: rgba(0, 0, 0, 1) !important;
+  }
 }
 
 .notion-like-editor-wrapper {

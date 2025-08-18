@@ -1,13 +1,13 @@
 :root {
   --tt-toolbar-height: 2.75rem;
   --tt-safe-area-bottom: env(safe-area-inset-bottom, 0px);
-  --tt-toolbar-bg-color: var(--white);
-  --tt-toolbar-border-color: var(--tt-gray-light-a-100);
+  --tt-toolbar-bg-color: rgba(30, 30, 30, 1);
+  --tt-toolbar-border-color: rgba(60, 60, 60, 1);
 }
 
 .dark {
-  --tt-toolbar-bg-color: var(--black);
-  --tt-toolbar-border-color: var(--tt-gray-dark-a-50);
+  --tt-toolbar-bg-color: rgba(30, 30, 30, 1);
+  --tt-toolbar-border-color: rgba(60, 60, 60, 1);
 }
 
 .tiptap-toolbar {
