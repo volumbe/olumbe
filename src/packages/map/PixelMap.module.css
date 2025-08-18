@@ -11,9 +11,20 @@
   image-rendering: crisp-edges;
 }
 
+/* Ensure vector overlays render with crisp edges (more blocky look) */
+.pixelMapContainer :global(.leaflet-overlay-pane svg),
+.pixelMapContainer :global(.leaflet-overlay-pane path) {
+  shape-rendering: crispEdges;
+}
+
 .pixelMapContainer :global(canvas),
 .pixelMapContainer :global(img) {
   image-rendering: pixelated;
+}
+
+/* Minimal dark background */
+.pixelMapContainer :global(.leaflet-container) {
+  background: #0b1220;
 }
 
 .mapRoot {
