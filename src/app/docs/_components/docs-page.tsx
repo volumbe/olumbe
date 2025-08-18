@@ -31,9 +31,20 @@ export function DocsPage() {
 
   const handleCreateDocument = async () => {
     setIsCreating(true);
+    const date = new Date();
+    const formatter = new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+      timeZoneName: "short",
+    });
+    const formattedDateTime = formatter.format(date);
     try {
       const docId = await createDocument({
-        title: "Untitled document",
+        title: formattedDateTime,
         initialContent: [{ type: "paragraph", content: [] }],
       });
       router.push(`/docs/${docId}`);
@@ -71,7 +82,7 @@ export function DocsPage() {
         <Button
           onClick={handleCreateDocument}
           disabled={isCreating}
-          className="bg-blue-600 hover:bg-blue-700 text-white"
+          className="bg-emerald-600 hover:bg-emerald-700 text-white"
         >
           {isCreating ? (
             <>
@@ -100,7 +111,7 @@ export function DocsPage() {
 
       {documents === undefined ? (
         <div className="flex justify-center items-center py-20">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
         </div>
       ) : documents.page.length === 0 ? (
         <Card className="bg-gray-800/50 border-gray-700">
@@ -115,7 +126,7 @@ export function DocsPage() {
             <Button
               onClick={handleCreateDocument}
               disabled={isCreating}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white"
             >
               {isCreating ? (
                 <>
