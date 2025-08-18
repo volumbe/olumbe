@@ -2,10 +2,10 @@
 
 body {
   --tt-toolbar-height: 44px;
-  --tt-theme-text: var(--tt-gray-light-900);
+  --tt-theme-text: rgba(255, 255, 255, 1);
 
   .dark & {
-    --tt-theme-text: var(--tt-gray-dark-900);
+    --tt-theme-text: rgba(255, 255, 255, 1);
   }
 }
 

@@ -1,18 +1,18 @@
 .tiptap.ProseMirror {
-  --tt-checklist-bg-color: var(--tt-gray-light-a-100);
-  --tt-checklist-bg-active-color: var(--tt-gray-light-a-900);
-  --tt-checklist-border-color: var(--tt-gray-light-a-200);
-  --tt-checklist-border-active-color: var(--tt-gray-light-a-900);
-  --tt-checklist-check-icon-color: var(--white);
-  --tt-checklist-text-active: var(--tt-gray-light-a-500);
+  --tt-checklist-bg-color: rgba(255, 255, 255, 1);
+  --tt-checklist-bg-active-color: rgba(255, 255, 255, 1);
+  --tt-checklist-border-color: rgba(255, 255, 255, 0.8);
+  --tt-checklist-border-active-color: rgba(255, 255, 255, 1);
+  --tt-checklist-check-icon-color: rgba(0, 0, 0, 1);
+  --tt-checklist-text-active: rgba(255, 255, 255, 0.7);
 
   .dark & {
-    --tt-checklist-bg-color: var(--tt-gray-dark-a-100);
-    --tt-checklist-bg-active-color: var(--tt-gray-dark-a-900);
-    --tt-checklist-border-color: var(--tt-gray-dark-a-200);
-    --tt-checklist-border-active-color: var(--tt-gray-dark-a-900);
-    --tt-checklist-check-icon-color: var(--black);
-    --tt-checklist-text-active: var(--tt-gray-dark-a-500);
+    --tt-checklist-bg-color: rgba(255, 255, 255, 1);
+    --tt-checklist-bg-active-color: rgba(255, 255, 255, 1);
+    --tt-checklist-border-color: rgba(255, 255, 255, 0.8);
+    --tt-checklist-border-active-color: rgba(255, 255, 255, 1);
+    --tt-checklist-check-icon-color: rgba(0, 0, 0, 1);
+    --tt-checklist-text-active: rgba(255, 255, 255, 0.7);
   }
 }
 
