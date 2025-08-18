@@ -1,8 +1,14 @@
 "use client";
 
 import * as React from "react";
-import { EditorContent, EditorContext, useEditor } from "@tiptap/react";
+import {
+  EditorContent,
+  EditorContext,
+  useEditor,
+  EditorProvider as TiptapEditorProvider,
+} from "@tiptap/react";
 import type { Doc as YDoc } from "yjs";
+import { useTiptapSync } from "@convex-dev/prosemirror-sync/tiptap";
 import { createPortal } from "react-dom";
 
 // --- Tiptap Core Extensions ---
@@ -59,14 +65,13 @@ import "@/components/tiptap-templates/notion-like/notion-like-editor.scss";
 import { NotionEditorHeader } from "@/components/tiptap-templates/notion-like/notion-like-editor-header";
 import { MobileToolbar } from "@/components/tiptap-templates/notion-like/notion-like-editor-mobile-toolbar";
 import { NotionToolbarFloating } from "@/components/tiptap-templates/notion-like/notion-like-editor-toolbar-floating";
+import { Id } from "@/convex/_generated/dataModel";
+import { api } from "@/convex/_generated/api";
 
-export interface NotionEditorProps {
-  room: string;
-  placeholder?: string;
-}
 
 export interface EditorProviderProps {
   placeholder?: string;
+  documentId: Id<"documents">;
 }
 
 /**
@@ -123,82 +128,84 @@ export function EditorContentArea() {
  * Component that creates and provides the editor instance
  */
 export function EditorProvider(props: EditorProviderProps) {
-  const { placeholder = "Start writing..." } = props;
+  const { placeholder = "Start writing...", documentId } = props;
+  const sync = useTiptapSync(api.prosemirror, documentId);
 
-
-  const editor = useEditor({
-    immediatelyRender: false,
-    shouldRerenderOnTransaction: false,
-    editorProps: {
-      attributes: {
-        class: "notion-like-editor",
-      },
-    },
-    extensions: [
-      StarterKit.configure({
-        undoRedo: false,
-        horizontalRule: false,
-        dropcursor: {
-          width: 2,
-        },
-        link: { openOnClick: false },
-      }),
-      HorizontalRule,
-      TextAlign.configure({ types: ["heading", "paragraph"] }),
-      Placeholder.configure({
-        placeholder,
-        emptyNodeClass: "is-empty with-slash",
-      }),
-      Mention,
-      Emoji.configure({
-        emojis: gitHubEmojis.filter(
-          (emoji) => !emoji.name.includes("regional")
-        ),
-        forceFallbackImages: true,
-      }),
-      Mathematics,
-      Superscript,
-      Subscript,
-      Color,
-      TextStyle,
-      TaskList,
-      TaskItem.configure({ nested: true }),
-      Highlight.configure({ multicolor: true }),
-      Selection,
-      Image,
-      ImageUploadNode.configure({
-        accept: "image/*",
-        maxSize: MAX_FILE_SIZE,
-        limit: 3,
-        upload: handleImageUpload,
-        onError: (error) => console.error("Upload failed:", error),
-      }),
-      UniqueID.configure({
-        types: [
-          "paragraph",
-          "bulletList",
-          "orderedList",
-          "taskList",
-          "heading",
-          "blockquote",
-          "codeBlock",
-        ],
-      }),
-      Typography,
-      UiState,
-    ],
-  });
-
-  if (!editor) {
+  if (sync.isLoading) {
     return <LoadingSpinner />;
+  }
+
+  if (!sync.initialContent) {
+    return <div>No initial content</div>;
   }
 
   return (
     <div className="notion-like-editor-wrapper">
-      <EditorContext.Provider value={{ editor }}>
+      <TiptapEditorProvider
+        immediatelyRender={false}
+        editorProps={{
+          attributes: {
+            class: "notion-like-editor",
+          },
+        }}
+        extensions={[
+          StarterKit.configure({
+            undoRedo: false,
+            horizontalRule: false,
+            dropcursor: {
+              width: 2,
+            },
+            link: { openOnClick: false },
+          }),
+          HorizontalRule,
+          TextAlign.configure({ types: ["heading", "paragraph"] }),
+          Placeholder.configure({
+            placeholder,
+            emptyNodeClass: "is-empty with-slash",
+          }),
+          Mention,
+          Emoji.configure({
+            emojis: gitHubEmojis.filter(
+              (emoji) => !emoji.name.includes("regional")
+            ),
+            forceFallbackImages: true,
+          }),
+          Mathematics,
+          Superscript,
+          Subscript,
+          Color,
+          TextStyle,
+          TaskList,
+          TaskItem.configure({ nested: true }),
+          Highlight.configure({ multicolor: true }),
+          Selection,
+          Image,
+          ImageUploadNode.configure({
+            accept: "image/*",
+            maxSize: MAX_FILE_SIZE,
+            limit: 3,
+            upload: handleImageUpload,
+            onError: (error) => console.error("Upload failed:", error),
+          }),
+          UniqueID.configure({
+            types: [
+              "paragraph",
+              "bulletList",
+              "orderedList",
+              "taskList",
+              "heading",
+              "blockquote",
+              "codeBlock",
+            ],
+          }),
+          Typography,
+          UiState,
+          sync.extension,
+        ]}
+      >
         <NotionEditorHeader />
         <EditorContentArea />
-      </EditorContext.Provider>
+      </TiptapEditorProvider>
     </div>
   );
 }
@@ -207,13 +214,13 @@ export function EditorProvider(props: EditorProviderProps) {
  * Full editor with all necessary providers, ready to use with just a room ID
  */
 export function NotionEditor({
-  room,
+  documentId,
   placeholder = "Start writing...",
-}: NotionEditorProps) {
+}: EditorProviderProps) {
   return (
     <UserProvider>
       <AppProvider>
-        <NotionEditorContent placeholder={placeholder} />
+        <NotionEditorContent placeholder={placeholder} documentId={documentId} />
       </AppProvider>
     </UserProvider>
   );
@@ -222,10 +229,12 @@ export function NotionEditor({
 /**
  * Internal component that handles the editor loading state
  */
-export function NotionEditorContent({ placeholder }: { placeholder?: string }) {
-  return (
-    <EditorProvider
-      placeholder={placeholder}
-    />
-  );
+export function NotionEditorContent({
+  placeholder,
+  documentId,
+}: {
+  placeholder?: string;
+  documentId: Id<"documents">;
+}) {
+  return <EditorProvider placeholder={placeholder} documentId={documentId} />;
 }
