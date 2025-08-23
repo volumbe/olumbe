@@ -39,9 +39,9 @@ export default function Terminal({ variant = "full" }: TerminalProps) {
 
   const availableCommands: CommandHelp[] = useMemo(() => {
     const navCommands: CommandHelp[] = [
-      { name: "/docs", description: "Go to documentation" },
+      { name: "/docs", description: "Go to docs" },
       { name: "/about", description: "Go to about page" },
-      { name: "/home", description: "Go to homepage" },
+      { name: "/home", description: "Go home" },
     ];
 
     const isOnDocs = pathname?.startsWith("/docs");
@@ -288,7 +288,7 @@ export default function Terminal({ variant = "full" }: TerminalProps) {
               </ul>
             </div>
           )}
-          {(status === "submitted" || status === "streaming") && (
+          {/* {(status === "submitted" || status === "streaming") && (
             <div className="mb-2 flex items-center gap-3">
               {status === "submitted" && (
                 <span className="text-slate-400 text-xs">Sending…</span>
@@ -301,7 +301,7 @@ export default function Terminal({ variant = "full" }: TerminalProps) {
                 Stop
               </button>
             </div>
-          )}
+          )} */}
           <div className="group flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-2 rounded-lg border border-slate-800/70 bg-slate-900/40 px-3 py-2 focus-within:border-emerald-400/60 focus-within:shadow-[0_0_0_3px_rgba(52,211,153,0.15)] transition">
             <span className="select-none text-emerald-400">guest@olumbe:</span>
             <textarea
