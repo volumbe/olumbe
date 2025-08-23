@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect, useMemo } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { ChatMessage } from "@/app/types";
@@ -64,7 +63,7 @@ export default function Terminal({ variant = "full" }: TerminalProps) {
     return [...baseCommands, ...filteredNav];
   }, [pathname]);
 
-  const filteredCommands: CommandHelp[] = (() => {
+  const filteredCommands: CommandHelp[] = useMemo(() => {
     const trimmed = input.trim();
     if (!trimmed.startsWith("/")) return [];
     const query = trimmed.slice(1).toLowerCase();
@@ -72,7 +71,7 @@ export default function Terminal({ variant = "full" }: TerminalProps) {
     return availableCommands.filter((cmd) =>
       cmd.name.slice(1).toLowerCase().startsWith(query)
     );
-  })();
+  }, [input, availableCommands]);
 
   const appendLine = (
     text: string,
@@ -160,16 +159,23 @@ export default function Terminal({ variant = "full" }: TerminalProps) {
   }, [messages, output]);
 
   useEffect(() => {
-    inputRef.current?.focus();
-    resizeTextArea(inputRef.current);
+    // Initial focus
+    const timer = setTimeout(() => {
+      inputRef.current?.focus();
+      resizeTextArea(inputRef.current);
+    }, 100);
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
     resizeTextArea(inputRef.current);
   }, [input]);
 
-  const handleTerminalClick = () => {
-    inputRef.current?.focus();
+  const handleTerminalClick = (e: React.MouseEvent) => {
+    // Only focus if we didn't click on the textarea itself
+    if (e.target !== inputRef.current) {
+      inputRef.current?.focus();
+    }
   };
 
   const getMessageCreatedAt = (m: ChatMessage): number => {
@@ -224,158 +230,115 @@ export default function Terminal({ variant = "full" }: TerminalProps) {
 
   const isOverlay = variant === "overlay";
 
-  const Wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) =>
-    isOverlay ? (
-      <div className="fixed inset-x-0 bottom-0 z-50 px-2 sm:px-4 pointer-events-none">
-        {children}
-      </div>
-    ) : (
-      <main className="w-full h-full px-0 sm:px-0">{children}</main>
-    );
-
-  return (
-    <Wrapper>
-      <section
+  const terminalContent = (
+    <section
+      className={
+        "relative w-full flex flex-col rounded-none border-t border-slate-800/70 bg-gradient-to-b from-slate-900/70 to-black/80 shadow-2xl shadow-emerald-500/10 backdrop-blur-md overflow-hidden " +
+        (isOverlay ? "pointer-events-auto h-auto" : "h-full")
+      }
+      onClick={handleTerminalClick}
+    >
+      <div
         className={
-          "relative w-full flex flex-col rounded-none border-t border-slate-800/70 bg-gradient-to-b from-slate-900/70 to-black/80 shadow-2xl shadow-emerald-500/10 backdrop-blur-md overflow-hidden " +
-          (isOverlay ? "pointer-events-auto h-auto" : "h-full")
+          "px-4 pt-0 pb-3 sm:px-4 sm:pt-0 sm:pb-4 flex flex-col min-h-0 " +
+          (isOverlay ? "" : "flex-1")
         }
-        onClick={handleTerminalClick}
       >
         <div
+          ref={outputRef}
           className={
-            "px-4 pt-0 pb-3 sm:px-4 sm:pt-0 sm:pb-4 flex flex-col min-h-0 " +
-            (isOverlay ? "" : "flex-1")
+            "font-mono text-sm leading-relaxed text-slate-200/95 pr-2 no-scrollbar " +
+            (isOverlay
+              ? "max-h-[40vh] overflow-y-auto"
+              : "flex-1 overflow-y-auto")
           }
+          aria-live="polite"
+          aria-relevant="additions"
         >
-          <div
-            ref={outputRef}
-            className={
-              "font-mono text-sm leading-relaxed text-slate-200/95 pr-2 no-scrollbar " +
-              (isOverlay
-                ? "max-h-[40vh] overflow-y-auto"
-                : "flex-1 overflow-y-auto")
-            }
-            aria-live="polite"
-            aria-relevant="additions"
-          >
-            <ol className="space-y-1">{mergedItems.map((item) => item.jsx)}</ol>
-          </div>
-
-          <form className="mt-3" onSubmit={handleSubmit}>
-            <AnimatePresence>
-              {input.trim().startsWith("/") && (
-                <motion.div
-                  key="cmd-tooltip"
-                  initial={{ opacity: 0, y: -8, scale: 0.98 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -8, scale: 0.98 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 500,
-                    damping: 32,
-                    mass: 0.6,
-                  }}
-                  className="mb-2 rounded-md border border-slate-800/70 bg-slate-900/95 backdrop-blur px-3 py-2 shadow-xl"
-                >
-                  <p className="text-[0.7rem] uppercase tracking-wider text-slate-400 mb-1">
-                    Available commands
-                  </p>
-                  <motion.ul
-                    layout
-                    initial="hidden"
-                    animate="show"
-                    exit="hidden"
-                    variants={{
-                      hidden: {
-                        transition: {
-                          staggerChildren: 0.015,
-                          staggerDirection: -1,
-                        },
-                      },
-                      show: { transition: { staggerChildren: 0.04 } },
-                    }}
-                    className="text-sm font-mono text-slate-100 space-y-1"
-                  >
-                    <AnimatePresence initial={false} mode="popLayout">
-                      {(filteredCommands.length > 0
-                        ? filteredCommands
-                        : availableCommands
-                      ).map((cmd) => (
-                        <motion.li
-                          key={cmd.name}
-                          layout
-                          initial={{ opacity: 0, y: -6 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -6 }}
-                          transition={{ duration: 0.15, ease: "easeOut" }}
-                          className="flex items-center gap-2"
-                        >
-                          <span className="text-emerald-300 whitespace-nowrap">
-                            {cmd.name}
-                          </span>
-                          <span className="text-slate-400">
-                            - {cmd.description}
-                          </span>
-                        </motion.li>
-                      ))}
-                      {filteredCommands.length === 0 &&
-                        input.trim().startsWith("/") &&
-                        input.trim().length > 1 && (
-                          <motion.li
-                            key="no-match"
-                            layout
-                            initial={{ opacity: 0, y: -6 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -6 }}
-                            transition={{ duration: 0.15, ease: "easeOut" }}
-                            className="text-slate-400"
-                          >
-                            No matching commands
-                          </motion.li>
-                        )}
-                    </AnimatePresence>
-                  </motion.ul>
-                </motion.div>
-              )}
-            </AnimatePresence>
-            {(status === "submitted" || status === "streaming") && (
-              <div className="mb-2 flex items-center gap-3">
-                {status === "submitted" && (
-                  <span className="text-slate-400 text-xs">Sending…</span>
-                )}
-                <button
-                  type="button"
-                  onClick={() => stop()}
-                  className="rounded border border-rose-500/50 bg-rose-500/10 px-2 py-1 text-xs text-rose-300 hover:bg-rose-500/20"
-                >
-                  Stop
-                </button>
-              </div>
-            )}
-            <div className="group flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-2 rounded-lg border border-slate-800/70 bg-slate-900/40 px-3 py-2 focus-within:border-emerald-400/60 focus-within:shadow-[0_0_0_3px_rgba(52,211,153,0.15)] transition">
-              <span className="select-none text-emerald-400">
-                guest@olumbe:
-              </span>
-              <textarea
-                ref={inputRef}
-                rows={1}
-                name="command"
-                autoComplete="off"
-                placeholder="Start typing… (try: /help, /clear)"
-                className="min-w-0 w-full sm:flex-1 bg-transparent outline-none placeholder-slate-500 text-slate-100 caret-emerald-400 resize-none overflow-hidden"
-                aria-label="Terminal input"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onInput={(e) => resizeTextArea(e.currentTarget)}
-                onKeyDown={handleKeyDown}
-              />
-            </div>
-          </form>
+          <ol className="space-y-1">{mergedItems.map((item) => item.jsx)}</ol>
         </div>
 
-        <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/5"></div>
-      </section>
-    </Wrapper>
+        <form className="mt-3" onSubmit={handleSubmit}>
+          {input.trim().startsWith("/") && (
+            <div className="mb-2 rounded-md border border-slate-800/70 bg-slate-900/95 backdrop-blur px-3 py-2 shadow-xl">
+              <p className="text-[0.7rem] uppercase tracking-wider text-slate-400 mb-1">
+                Available commands
+              </p>
+              <ul className="text-sm font-mono text-slate-100 space-y-1">
+                {(filteredCommands.length > 0
+                  ? filteredCommands
+                  : availableCommands
+                ).map((cmd) => (
+                  <li
+                    key={cmd.name}
+                    className="flex items-center gap-2"
+                  >
+                    <span className="text-emerald-300 whitespace-nowrap">
+                      {cmd.name}
+                    </span>
+                    <span className="text-slate-400">
+                      - {cmd.description}
+                    </span>
+                  </li>
+                ))}
+                {filteredCommands.length === 0 &&
+                  input.trim().startsWith("/") &&
+                  input.trim().length > 1 && (
+                    <li className="text-slate-400">
+                      No matching commands
+                    </li>
+                  )}
+              </ul>
+            </div>
+          )}
+          {(status === "submitted" || status === "streaming") && (
+            <div className="mb-2 flex items-center gap-3">
+              {status === "submitted" && (
+                <span className="text-slate-400 text-xs">Sending…</span>
+              )}
+              <button
+                type="button"
+                onClick={() => stop()}
+                className="rounded border border-rose-500/50 bg-rose-500/10 px-2 py-1 text-xs text-rose-300 hover:bg-rose-500/20"
+              >
+                Stop
+              </button>
+            </div>
+          )}
+          <div className="group flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-2 rounded-lg border border-slate-800/70 bg-slate-900/40 px-3 py-2 focus-within:border-emerald-400/60 focus-within:shadow-[0_0_0_3px_rgba(52,211,153,0.15)] transition">
+            <span className="select-none text-emerald-400">
+              guest@olumbe:
+            </span>
+            <textarea
+              ref={inputRef}
+              rows={1}
+              name="command"
+              autoComplete="off"
+              autoFocus
+              placeholder="Start typing… (try: /help, /clear)"
+              className="min-w-0 w-full sm:flex-1 bg-transparent outline-none placeholder-slate-500 text-slate-100 caret-emerald-400 resize-none overflow-hidden"
+              aria-label="Terminal input"
+              value={input}
+              onChange={(e) => {
+                const value = e.target.value;
+                setInput(value);
+                resizeTextArea(e.currentTarget);
+              }}
+              onKeyDown={handleKeyDown}
+            />
+          </div>
+        </form>
+      </div>
+
+      <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/5"></div>
+    </section>
+  );
+
+  return isOverlay ? (
+    <div className="fixed inset-x-0 bottom-0 z-50 px-2 sm:px-4 pointer-events-none">
+      {terminalContent}
+    </div>
+  ) : (
+    <main className="w-full h-full px-0 sm:px-0">{terminalContent}</main>
   );
 }
