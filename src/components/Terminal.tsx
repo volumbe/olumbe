@@ -227,10 +227,37 @@ export default function Terminal({ variant = "full" }: TerminalProps) {
       ),
     }));
 
-    return [...chatItems, ...outputItems].sort(
+    const allItems = [...chatItems, ...outputItems].sort(
       (a, b) => a.createdAt - b.createdAt
     );
-  }, [messages, output]);
+
+    // Add loading indicator when waiting or when streaming but no content yet
+    if (status === "submitted" || status === "streaming") {
+      // Check if there's an assistant message with content already
+      const lastMessage = messages[messages.length - 1];
+      const hasAssistantContent = lastMessage && 
+        lastMessage.role === "assistant" && 
+        lastMessage.parts.some(p => p.type === "text" && p.text && p.text.length > 0);
+      
+      // Only show loading if there's no assistant content yet
+      if (!hasAssistantContent) {
+        allItems.push({
+          createdAt: Date.now(),
+          key: "loading",
+          jsx: (
+            <li key="loading" className="text-slate-100 whitespace-nowrap">
+              <span className="text-emerald-300">vivek@olumbe: </span>
+              <span className="animate-pulse text-slate-400">•</span>
+              <span className="animate-pulse animation-delay-200 text-slate-400">•</span>
+              <span className="animate-pulse animation-delay-400 text-slate-400">•</span>
+            </li>
+          ),
+        });
+      }
+    }
+
+    return allItems;
+  }, [messages, output, status]);
 
   const isOverlay = variant === "overlay";
 
@@ -288,20 +315,6 @@ export default function Terminal({ variant = "full" }: TerminalProps) {
               </ul>
             </div>
           )}
-          {/* {(status === "submitted" || status === "streaming") && (
-            <div className="mb-2 flex items-center gap-3">
-              {status === "submitted" && (
-                <span className="text-slate-400 text-xs">Sending…</span>
-              )}
-              <button
-                type="button"
-                onClick={() => stop()}
-                className="rounded border border-rose-500/50 bg-rose-500/10 px-2 py-1 text-xs text-rose-300 hover:bg-rose-500/20"
-              >
-                Stop
-              </button>
-            </div>
-          )} */}
           <div className="group flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-2 rounded-lg border border-slate-800/70 bg-slate-900/40 px-3 py-2 focus-within:border-emerald-400/60 focus-within:shadow-[0_0_0_3px_rgba(52,211,153,0.15)] transition">
             <span className="select-none text-emerald-400">guest@olumbe:</span>
             <textarea
