@@ -3,6 +3,7 @@ import "leaflet/dist/leaflet.css";
 import "./globals.css";
 import { ConvexClientProvider } from "@/components/convex-provider";
 import TerminalHeader from "@/components/TerminalHeader";
+import TerminalOverlay from "@/components/TerminalOverlay";
 
 export const metadata: Metadata = {
   title: {
@@ -82,6 +83,7 @@ export default function RootLayout({
       </head>
       <body className="font-sans min-h-screen min-w-screen size-full flex flex-col">
         <TerminalHeader />
+        <TerminalOverlay />
         <div className="flex-1 flex items-center justify-center">
           <ConvexClientProvider>{children}</ConvexClientProvider>
         </div>

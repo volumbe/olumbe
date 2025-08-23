@@ -13,7 +13,11 @@ type OutputLine = {
   createdAt: number;
 };
 
-export default function Terminal() {
+type TerminalProps = {
+  variant?: "full" | "overlay";
+};
+
+export default function Terminal({ variant = "full" }: TerminalProps) {
   const router = useRouter();
   const pathname = usePathname();
   const [output, setOutput] = useState<OutputLine[]>([
@@ -218,16 +222,40 @@ export default function Terminal() {
     );
   }, [messages, output]);
 
+  const isOverlay = variant === "overlay";
+
+  const Wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) =>
+    isOverlay ? (
+      <div className="fixed inset-x-0 bottom-0 z-50 px-2 sm:px-4 pointer-events-none">
+        {children}
+      </div>
+    ) : (
+      <main className="w-full h-full px-0 sm:px-0">{children}</main>
+    );
+
   return (
-    <main className="w-full h-full px-0 sm:px-0">
+    <Wrapper>
       <section
-        className="relative h-full w-full flex flex-col rounded-none border-t border-slate-800/70 bg-gradient-to-b from-slate-900/70 to-black/80 shadow-2xl shadow-emerald-500/10 backdrop-blur-md overflow-hidden"
+        className={
+          "relative w-full flex flex-col rounded-none border-t border-slate-800/70 bg-gradient-to-b from-slate-900/70 to-black/80 shadow-2xl shadow-emerald-500/10 backdrop-blur-md overflow-hidden " +
+          (isOverlay ? "pointer-events-auto h-auto" : "h-full")
+        }
         onClick={handleTerminalClick}
       >
-        <div className="px-4 pt-0 pb-3 sm:px-4 sm:pt-0 sm:pb-4 flex-1 flex flex-col min-h-0">
+        <div
+          className={
+            "px-4 pt-0 pb-3 sm:px-4 sm:pt-0 sm:pb-4 flex flex-col min-h-0 " +
+            (isOverlay ? "" : "flex-1")
+          }
+        >
           <div
             ref={outputRef}
-            className="font-mono text-sm leading-relaxed text-slate-200/95 flex-1 overflow-y-auto pr-2 no-scrollbar"
+            className={
+              "font-mono text-sm leading-relaxed text-slate-200/95 pr-2 no-scrollbar " +
+              (isOverlay
+                ? "max-h-[40vh] overflow-y-auto"
+                : "flex-1 overflow-y-auto")
+            }
             aria-live="polite"
             aria-relevant="additions"
           >
@@ -348,6 +376,6 @@ export default function Terminal() {
 
         <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-white/5"></div>
       </section>
-    </main>
+    </Wrapper>
   );
 }
