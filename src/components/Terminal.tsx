@@ -5,6 +5,7 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { ChatMessage } from "@/app/types";
 import { useRouter, usePathname } from "next/navigation";
+import { cn } from "@/utils";
 
 type OutputLine = {
   text: string;
@@ -19,13 +20,7 @@ type TerminalProps = {
 export default function Terminal({ variant = "full" }: TerminalProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const [output, setOutput] = useState<OutputLine[]>([
-    {
-      text: "Type /help for options.",
-      variant: "system",
-      createdAt: Date.now(),
-    },
-  ]);
+  const [output, setOutput] = useState<OutputLine[]>([]);
   const [input, setInput] = useState("");
   const outputRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -117,12 +112,21 @@ export default function Terminal({ variant = "full" }: TerminalProps) {
         break;
       case "docs":
         router.push("/docs");
+        setOutput([]);
+        setMessages([]);
+        messageTimestampsRef.current.clear();
         break;
       case "about":
         router.push("/about");
+        setOutput([]);
+        setMessages([]);
+        messageTimestampsRef.current.clear();
         break;
       case "home":
         router.push("/");
+        setOutput([]);
+        setMessages([]);
+        messageTimestampsRef.current.clear();
         break;
       default:
         appendLine(`Unknown command: ${trimmedCommand}. Type /help.`, "system");
@@ -232,26 +236,26 @@ export default function Terminal({ variant = "full" }: TerminalProps) {
 
   const terminalContent = (
     <section
-      className={
-        "relative w-full flex flex-col rounded-none border-t border-slate-800/70 bg-gradient-to-b from-slate-900/70 to-black/80 shadow-2xl shadow-emerald-500/10 backdrop-blur-md overflow-hidden " +
-        (isOverlay ? "pointer-events-auto h-auto" : "h-full")
-      }
+      className={cn(
+        "relative w-full flex flex-col rounded-none overflow-hidden",
+        isOverlay ? "pointer-events-auto h-auto" : "h-full"
+      )}
       onClick={handleTerminalClick}
     >
       <div
-        className={
-          "px-4 pt-0 pb-3 sm:px-4 sm:pt-0 sm:pb-4 flex flex-col min-h-0 " +
-          (isOverlay ? "" : "flex-1")
-        }
+        className={cn(
+          "px-4 pt-0 pb-3 sm:px-4 sm:pt-0 sm:pb-4 flex flex-col min-h-0",
+          isOverlay ? "" : "flex-1"
+        )}
       >
         <div
           ref={outputRef}
-          className={
-            "font-mono text-sm leading-relaxed text-slate-200/95 pr-2 no-scrollbar " +
-            (isOverlay
+          className={cn(
+            "font-mono text-sm leading-relaxed text-slate-200/95 pr-2 no-scrollbar",
+            isOverlay
               ? "max-h-[40vh] overflow-y-auto"
-              : "flex-1 overflow-y-auto")
-          }
+              : "flex-1 overflow-y-auto"
+          )}
           aria-live="polite"
           aria-relevant="additions"
         >
@@ -269,24 +273,17 @@ export default function Terminal({ variant = "full" }: TerminalProps) {
                   ? filteredCommands
                   : availableCommands
                 ).map((cmd) => (
-                  <li
-                    key={cmd.name}
-                    className="flex items-center gap-2"
-                  >
+                  <li key={cmd.name} className="flex items-center gap-2">
                     <span className="text-emerald-300 whitespace-nowrap">
                       {cmd.name}
                     </span>
-                    <span className="text-slate-400">
-                      - {cmd.description}
-                    </span>
+                    <span className="text-slate-400">- {cmd.description}</span>
                   </li>
                 ))}
                 {filteredCommands.length === 0 &&
                   input.trim().startsWith("/") &&
                   input.trim().length > 1 && (
-                    <li className="text-slate-400">
-                      No matching commands
-                    </li>
+                    <li className="text-slate-400">No matching commands</li>
                   )}
               </ul>
             </div>
@@ -306,9 +303,7 @@ export default function Terminal({ variant = "full" }: TerminalProps) {
             </div>
           )}
           <div className="group flex flex-col sm:flex-row items-start sm:items-center gap-1 sm:gap-2 rounded-lg border border-slate-800/70 bg-slate-900/40 px-3 py-2 focus-within:border-emerald-400/60 focus-within:shadow-[0_0_0_3px_rgba(52,211,153,0.15)] transition">
-            <span className="select-none text-emerald-400">
-              guest@olumbe:
-            </span>
+            <span className="select-none text-emerald-400">guest@olumbe:</span>
             <textarea
               ref={inputRef}
               rows={1}
@@ -335,10 +330,10 @@ export default function Terminal({ variant = "full" }: TerminalProps) {
   );
 
   return isOverlay ? (
-    <div className="fixed inset-x-0 bottom-0 z-50 px-2 sm:px-4 pointer-events-none">
+    <div className="fixed inset-x-0 bottom-0 z-50 pointer-events-none">
       {terminalContent}
     </div>
   ) : (
-    <main className="w-full h-full px-0 sm:px-0">{terminalContent}</main>
+    <main className="w-full h-full">{terminalContent}</main>
   );
 }
