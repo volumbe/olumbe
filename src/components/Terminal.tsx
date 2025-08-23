@@ -201,8 +201,18 @@ export default function Terminal({ variant = "full" }: TerminalProps) {
           <span className="text-emerald-300 mr-2">
             {m.role === "user" ? "guest@olumbe:" : "vivek@olumbe:"}
           </span>
-          {m.parts.map((part, idx) =>
-            part.type === "text" ? <span key={idx}>{part.text}</span> : null
+          {m.role === "assistant" && 
+           !m.parts.some(p => p.type === "text" && p.text) && 
+           (status === "submitted" || status === "streaming") ? (
+            <>
+              <span className="animate-pulse text-slate-400">•</span>
+              <span className="animate-pulse animation-delay-200 text-slate-400">•</span>
+              <span className="animate-pulse animation-delay-400 text-slate-400">•</span>
+            </>
+          ) : (
+            m.parts.map((part, idx) =>
+              part.type === "text" ? <span key={idx}>{part.text}</span> : null
+            )
           )}
         </li>
       ),
@@ -227,36 +237,9 @@ export default function Terminal({ variant = "full" }: TerminalProps) {
       ),
     }));
 
-    const allItems = [...chatItems, ...outputItems].sort(
+    return [...chatItems, ...outputItems].sort(
       (a, b) => a.createdAt - b.createdAt
     );
-
-    // Add loading indicator when waiting or when streaming but no content yet
-    if (status === "submitted" || status === "streaming") {
-      // Check if there's an assistant message with content already
-      const lastMessage = messages[messages.length - 1];
-      const hasAssistantContent = lastMessage && 
-        lastMessage.role === "assistant" && 
-        lastMessage.parts.some(p => p.type === "text" && p.text && p.text.length > 0);
-      
-      // Only show loading if there's no assistant content yet
-      if (!hasAssistantContent) {
-        allItems.push({
-          createdAt: Date.now(),
-          key: "loading",
-          jsx: (
-            <li key="loading" className="text-slate-100 whitespace-nowrap">
-              <span className="text-emerald-300">vivek@olumbe: </span>
-              <span className="animate-pulse text-slate-400">•</span>
-              <span className="animate-pulse animation-delay-200 text-slate-400">•</span>
-              <span className="animate-pulse animation-delay-400 text-slate-400">•</span>
-            </li>
-          ),
-        });
-      }
-    }
-
-    return allItems;
   }, [messages, output, status]);
 
   const isOverlay = variant === "overlay";
@@ -264,8 +247,10 @@ export default function Terminal({ variant = "full" }: TerminalProps) {
   const terminalContent = (
     <section
       className={cn(
-        "relative w-full flex flex-col rounded-none overflow-hidden",
-        isOverlay ? "pointer-events-auto h-auto" : "h-full"
+        "relative w-full flex flex-col overflow-hidden",
+        isOverlay 
+          ? "pointer-events-auto h-auto rounded-t-lg bg-black/95 backdrop-blur-lg border-t border-slate-700/50" 
+          : "h-full rounded-none"
       )}
       onClick={handleTerminalClick}
     >
