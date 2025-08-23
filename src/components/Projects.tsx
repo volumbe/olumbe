@@ -107,8 +107,8 @@ export const Projects = ({ startups } : { startups: Project[] }) => {
                         animate={{ scale: 1.75, transition: { repeat: Infinity, repeatType: "mirror", ease: "easeInOut", duration: 1 } }}
                         className="z-30 hover:cursor-zoom-in"
                         onClick={() => setIsOpen(!isOpen)}
-                        onHoverStart={() => setIsOpen(true)}
-                        onHoverEnd={() => setIsOpen(false)}
+                        // onHoverStart={() => setIsOpen(true)}
+                        // onHoverEnd={() => setIsOpen(false)}
                         cx={dimensions.width / 2} cy={10} r={5} fill="url('#radialGradient')" />
                 </motion.svg>}
 
